@@ -1,5 +1,5 @@
 from data.preprocess import TimeSeriesPreprocessor, MembraneDataLoader
-from tests.predict import rnn_predict
+from tests.predict import predict
 import matplotlib.pyplot as plt
 import torch
 from models.lstm1 import MyLSTM
@@ -7,6 +7,8 @@ from tqdm import tqdm
 from os.path import exists as ose
 import shutil
 import os
+import numpy as np
+from scipy.interpolate import interp1d
 
 device = torch.device('cuda')
 
@@ -49,11 +51,13 @@ rnn_delay = 12.6
 pred_id = [None] * seq_len
 pred_id_time = [None] * seq_len
 
-for i in tqdm(range(len(mem_time_test) - seq_len)):
-    pred, dt = rnn_predict(model, mem_time_test[i:i + seq_len], mem_data_test[i:i + seq_len], new_dt, rnn_delay,
+for i in tqdm(range(int((len(mem_time_test) - seq_len)))):
+
+    pred, dt = predict(model, mem_time_test[i:i + seq_len], mem_data_test[i:i + seq_len], new_dt, rnn_delay,
                            seq_len, device, x_normalizer)
     pred_id.append(pred)
-    pred_id_time.append(mem_time_test[i + seq_len] + dt)
+
+    pred_id_time.append(mem_time_test[i + seq_len - 1] + dt)
 
 plt.figure(figsize=(100, 40))
 lw = 3
@@ -64,6 +68,45 @@ plt.plot(pred_id_time, pred_id, color='C0', linestyle='dashed', linewidth=lw, al
 plt.legend(loc='lower right', frameon=True)
 plt.xlabel('Time (s)')
 plt.ylabel('Membrane Index')
-plt.xlim([pred_id_time[-1]-50,pred_id_time[-1]])
+# plt.xlim([pred_id_time[-1]-50,pred_id_time[-1]])
 plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
+plt.close()
+
+mem_time_eval = mem_time_test[seq_len+10:]
+mem_data_eval = mem_data_test[seq_len+10:]
+
+pred_time_eval = pred_id_time[seq_len+10:]
+pred_data_eval = pred_id[seq_len+10:]
+
+# Define a common time base
+common_time = np.linspace(
+    max(min(mem_time_eval), min(pred_time_eval)),
+    min(max(mem_time_eval), max(pred_time_eval)),
+    num=max(len(mem_time_eval), len(pred_time_eval))
+)
+
+# Interpolate both time series
+interp_mem_data = interp1d(mem_time_eval, mem_data_eval, kind='linear', fill_value="extrapolate")
+interp_preds_data = interp1d(pred_time_eval, pred_data_eval, kind='linear', fill_value="extrapolate")
+
+mem_data_interp = interp_mem_data(common_time)
+preds_data_interp = interp_preds_data(common_time)
+
+# 3. Compute error as a function of time
+error = np.abs(mem_data_interp - preds_data_interp)
+
+# 4. Print average error (mean absolute error)
+average_error = np.mean(error)
+print(f"Average Absolute Error: {average_error:.4f}")
+
+# 5. Plot error over time
+plt.figure(figsize=(10, 5))
+plt.plot(common_time, error, label=f' Average Absolute Error = {average_error:.2f}')
+plt.xlabel("Time")
+plt.ylabel("Error")
+plt.title("Time-varying Error Between Interpolated Time Series")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.savefig(output_dir + '/prediction_error.png', bbox_inches='tight')
 plt.close()

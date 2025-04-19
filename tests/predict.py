@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import math
 
-def rnn_predict(model, indtime_history, ind_history, dt_new, rnn_delay, seq_len, device, x_normalizer=None):
+def predict(model, indtime_history, ind_history, dt_new, rnn_delay, seq_len, device, x_normalizer=None):
 
     # interpolation
     interp_func = interp1d(indtime_history, ind_history, kind='linear', fill_value='extrapolate')
@@ -31,7 +31,7 @@ def predict_data(model, device, history, deltat, dt_new, seq_len, x_normalizer=N
             predicted_data = torch.cat((predicted_data, output[0, -1].unsqueeze(-1).detach().cpu()), dim=0)
     predicted_data_denorm = x_normalizer.denormalize(predicted_data).numpy()
 
-    # pred_idx = int((1 - ratio) * predicted_data_denorm[-2] + ratio * predicted_data_denorm[-1])
-    pred_idx = int(predicted_data_denorm[-1])
+    pred_idx = int((1 - ratio) * predicted_data_denorm[-2] + ratio * predicted_data_denorm[-1])
+    # pred_idx = int(predicted_data_denorm[-1])
 
     return pred_idx, predicted_data_denorm
