@@ -1,5 +1,5 @@
 from data.preprocess import TimeSeriesPreprocessor, MembraneDataLoader
-from tests.predict import predict
+from testfuncs.predict import predict
 import matplotlib.pyplot as plt
 import torch
 from models.lstm1 import MyLSTM
@@ -9,17 +9,18 @@ import shutil
 import os
 import numpy as np
 from scipy.interpolate import interp1d
-from data.evaluate import percent_variance_explained
+from data.evaluate import percent_variance_explained, smape
 import pylab
 
 device = torch.device('cuda')
 
-params = {'legend.fontsize': 25, 'axes.labelsize': 25, 'axes.titlesize': 25, 'xtick.labelsize': 25,
-          'ytick.labelsize': 25}
+multp = 6
+params = {'legend.fontsize': 25*multp, 'axes.labelsize': 25*multp, 'axes.titlesize': 25*multp, 'xtick.labelsize': 25*multp,
+          'ytick.labelsize': 25*multp}
 pylab.rcParams.update(params)
 
 input_dir = 'train/train_output/LSTM1'
-output_dir = 'tests/test_output/LSTM1'
+output_dir = 'testfuncs/test_output/LSTM1'
 
 if ose(output_dir):
     shutil.rmtree(output_dir)
@@ -29,8 +30,9 @@ state = TimeSeriesPreprocessor.load_state(input_dir + '/checkpoints' + '/LSTM1_n
 new_dt = state['dt_new']
 x_normalizer = state['normalizer']
 seq_len = state['seq_len']
+train_size = 2000 # state['train_size']
 
-checkpoint = torch.load(input_dir + '/checkpoints' + '/checkpoint_30.pt', map_location=device)
+checkpoint = torch.load(input_dir + '/checkpoints' + '/checkpoint_50.pt', map_location=device)
 
 model = MyLSTM(InFeatures=1,
                 OutFeatures=1,
@@ -41,16 +43,25 @@ model = MyLSTM(InFeatures=1,
 
 model.load_state_dict(checkpoint['model_state_dict'])
 model.to(device)
+
+# printing out the model size
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Number of parameters: {total_params}")
+
 model.eval()
 
-# load data from desired location in dataset folder
-loader = MembraneDataLoader(date="4-17-25", frequency=0.67, number=1)
+# ~9 Hz sampled data (from the training data sample)
+# loader = MembraneDataLoader(date="4-17-25", frequency=0.67, number=1)
+# mem_time, mem_data = loader.load_data()
+# buffer = 2000
+# mem_time_test = mem_time[-(seq_len+buffer):]
+# mem_data_test = mem_data[-(seq_len+buffer):]
+
+# ~40 Hz sampled data (same as training but from a different sample than the training data)
+loader = MembraneDataLoader(date="4-17-25", frequency=0.67, number=2)
 mem_time, mem_data = loader.load_data()
-
-buffer = 2000
-
-mem_time_test = mem_time[-(seq_len+buffer):]
-mem_data_test = mem_data[-(seq_len+buffer):]
+mem_time_test = mem_time[:train_size]
+mem_data_test = mem_data[:train_size]
 
 rnn_delay = 0.25
 
@@ -81,26 +92,30 @@ interp_preds_data = interp1d(pred_time_eval, pred_data_eval, kind='linear', fill
 mem_data_interp = interp_mem_data(common_time)
 preds_data_interp = interp_preds_data(common_time)
 
-# 3. Compute error as a function of time
+#  Compute error as a function of time
 error = mem_data_interp - preds_data_interp
 # error = mem_data_interp - pred_data_eval
 
-# 4. Print average error (mean absolute error)
+# Print average error (mean absolute error)
 average_error = np.mean(np.abs(error))
-print(f"Average Absolute Error: {average_error:.4f}")
+print(f"MAE = {average_error:.4f}")
 
-pct_var = percent_variance_explained(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32))
-print(f"Variance explained: {pct_var:.2f}%")
+pct_var1 = percent_variance_explained(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32))
+print(f"R² % = {pct_var1:.2f}%")
 
-plt.figure(figsize=(60, 48))
-lw = 3
+pct_var2 = smape(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32))
+print(f"SMAPE = {pct_var2:.2f}%")
+
+# Plotting
+plt.figure(figsize=(30*multp, 24*multp))
+lw = 3*multp
 plt.plot(mem_time_test, mem_data_test, color='C1', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
 plt.plot(pred_id_time, pred_id, color='C0', linestyle='dashed', linewidth=lw, alpha=1, label='Prediction')
-plt.plot(pred_time_eval, error, label=f'Error')
+plt.plot(pred_time_eval, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
 plt.legend(loc='lower left', frameon=True)
 plt.xlabel('Time (s)')
 plt.ylabel('Index')
-plt.title(f'Average Absolute Error = {average_error:.2f}, Variance explained: {pct_var:.2f}%')
+plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%')
 # plt.xlim([pred_id_time[-1]-50, pred_id_time[-1]])
 plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
 plt.close()

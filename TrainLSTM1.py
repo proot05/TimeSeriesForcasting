@@ -7,7 +7,7 @@ import torch
 from tqdm import tqdm
 from data.preprocess import MyDatasetAutoregress, MembraneDataLoader, TimeSeriesPreprocessor
 from train.train import test_rollout_autoregress, train_regular_transformer_autoregress
-from data.evaluate import percent_variance_explained
+from data.evaluate import percent_variance_explained, smape
 from models.lstm1 import MyLSTM
 from models.loss import CombinedLoss
 import pylab
@@ -71,7 +71,7 @@ total_params = sum(p.numel() for p in model.parameters())
 print(f"Number of parameters: {total_params}")
 
 # training parameters
-epochs = 31 # 51
+epochs = 51
 lr = 1e-4
 save_interval = (epochs - 1)/5
 gamma = 0.999
@@ -116,31 +116,32 @@ for epoch in tqdm(range(epochs)):
         # rollout
         pred, gt = test_rollout_autoregress(model, device, processed_train_inputs, seq_len=seq_len, x_normalizer=preprocessor.normalizer)
 
-        # plot out the prediction results
         pick_channel = 0
+
+        error = pred.numpy()[:, pick_channel] - gt.numpy()[:, pick_channel]
+
+        average_error = np.mean(np.abs(error))
+        print(f"MAE = {average_error:.4f}")
+
+        pct_var1 = percent_variance_explained(pred, gt)
+        print(f"R² % = {pct_var1:.2f}%")
+
+        pct_var2 = smape(pred, gt)
+        print(f"SMAPE = {pct_var2:.2f}%")
+
+        # plot out the prediction results
         # plot out the energy distribution
         fig, ax = plt.subplots(figsize=(20, 16))
         lw = 3
 
         ax.plot(gt.numpy()[:, pick_channel], color='C0', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
-        ax.plot(pred.numpy()[:, pick_channel], color='C1', linestyle='dashdot', linewidth=lw, alpha=1,
-                label='Prediction')
-
-        error = pred.numpy()[:, pick_channel] - gt.numpy()[:, pick_channel]
-
-        average_error = np.mean(np.abs(error))
-        print(f"Average Absolute Error: {average_error:.4f}")
-
-        pct_var = percent_variance_explained(pred, gt)
-        print(f"Variance explained: {pct_var:.2f}%")
-
-        ax.plot(error, color='C2', linestyle='solid',
-                linewidth=lw, alpha=1, label='Difference')
+        ax.plot(pred.numpy()[:, pick_channel], color='C1', linestyle='dashdot', linewidth=lw, alpha=1, label='Prediction')
+        ax.plot(error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
         leg = ax.legend(loc='lower left', frameon=True)
         leg.get_frame().set_edgecolor('black')
         ax.set_xlabel('Time (s)')
         ax.set_ylabel('Index')
-        plt.title(f'Average Absolute Error = {average_error:.2f}, Variance explained: {pct_var:.2f}%')
+        plt.title(f'Epoch {epoch}: MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, Loss = {temp_error.detach().cpu():.4f}')
         fig.savefig(output_dir + '/inference/rollout_epoch{:d}.png'.format(epoch), bbox_inches='tight')
         pick_channel = 1
 

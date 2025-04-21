@@ -178,6 +178,7 @@ class MyDatasetAutoregress(Dataset):
         return {'input': input_seq, 'output': output_seq}
 
 
+# OLD CLASS
 class MyDataset(Dataset):
     def __init__(self, inputs, n_seq1):
         self.inputs = inputs

@@ -2,6 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
+# OLD FUNCTION
 def train_regular_transformer(model, device, train_loader, optimizer, criterion, epoch = 0, scheduler = None , x_normalizer = None, output_dir = None, save_interval = 100):
     model.train()
     train_ins_error = []
@@ -101,7 +102,7 @@ def train_regular_transformer_autoregress(model, device, train_loader, optimizer
                     alpha=1, label='predicted output')
 
             # Add legend
-            leg = ax.legend(loc='lower left', frameon=True, bbox_to_anchor=(1, 1), ncol=3)
+            leg = ax.legend(loc='lower left', frameon=True)
             leg.get_frame().set_edgecolor('black')
 
             # Set plot labels and title
@@ -144,7 +145,7 @@ def test_rollout_autoregress(model, device, data, seq_len = 1,  x_normalizer = N
     return predicted_data_denorm, gt_data_denorm
 
 
-
+# OLD FUNCTION
 def test_rollout(model, device, data, seq_len = 1,  x_normalizer = None):
     model.eval()
     predicted_data = data[:seq_len] # x_normalizer.normalize(data[:seq_len])
@@ -153,7 +154,7 @@ def test_rollout(model, device, data, seq_len = 1,  x_normalizer = None):
     for i in tqdm(range(len(data)-seq_len)):
         output = model(predicted_data[-seq_len:].unsqueeze(0).to(device)) # <B,L,C>
         predicted_data = torch.cat((predicted_data,output[0,-1].unsqueeze(-1).detach().cpu()), dim = 0)
-        # print('in tests',gt_data.shape, data[seq_len+i].unsqueeze(-1).detach().cpu().shape)
+        # print('in testfuncs',gt_data.shape, data[seq_len+i].unsqueeze(-1).detach().cpu().shape)
         gt_data = torch.cat((gt_data, data[seq_len+i].unsqueeze(-1).detach().cpu()), dim = 0)
     predicted_data_denorm =  x_normalizer.denormalize(predicted_data)
     gt_data_denorm = x_normalizer.denormalize(gt_data)
