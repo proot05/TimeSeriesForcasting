@@ -33,6 +33,8 @@ x_normalizer = state['normalizer']
 seq_len = state['seq_len']
 train_size = state['train_size']
 
+print("dt = ", new_dt)
+
 checkpoint = torch.load(input_dir + '/checkpoints' + '/checkpoint_50.pt', map_location=device)
 
 model = MyLSTM(InFeatures=1,
@@ -66,7 +68,7 @@ mem_time, mem_data = loader.load_data()
 mem_time_test = mem_time[:train_size]
 mem_data_test = mem_data[:train_size]
 
-fut_time = 0.25
+fut_time = 0.25 # new_dt
 rnn_delay = fut_time/new_dt
 
 pred_id = [None] * seq_len
@@ -99,6 +101,8 @@ preds_data_interp = interp_preds_data(common_time)
 #  Compute error as a function of time
 error = mem_data_interp - preds_data_interp
 # error = mem_data_interp - pred_data_eval
+
+print(f"Future Prediction Time = {fut_time:.4f}")
 
 # Print average error (mean absolute error)
 average_error = np.mean(np.abs(error))

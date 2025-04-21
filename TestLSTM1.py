@@ -32,6 +32,8 @@ x_normalizer = state['normalizer']
 seq_len = state['seq_len']
 train_size = state['train_size']
 
+print("dt = ", new_dt)
+
 checkpoint = torch.load(input_dir + '/checkpoints' + '/checkpoint_50.pt', map_location=device)
 
 model = MyLSTM(InFeatures=1,
@@ -65,7 +67,8 @@ mem_time, mem_data = loader.load_data()
 mem_time_test = mem_time[:train_size]
 mem_data_test = mem_data[:train_size]
 
-rnn_delay = 0.25
+# time into the future to predict at
+rnn_delay = 0.25  #new_dt
 
 pred_id = [None] * seq_len
 pred_id_time = [None] * seq_len
@@ -98,6 +101,8 @@ preds_data_interp = interp_preds_data(common_time)
 error = mem_data_interp - preds_data_interp
 # error = mem_data_interp - pred_data_eval
 
+print(f"Future Prediction Time = {rnn_delay:.4f}")
+
 # Print average error (mean absolute error)
 average_error = np.mean(np.abs(error))
 print(f"MAE = {average_error:.4f}")
@@ -118,7 +123,7 @@ plt.figure(figsize=(30*multp, 24*multp))
 lw = 3*multp
 plt.plot(mem_time_test, mem_data_test, color='C1', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
 plt.plot(pred_id_time, pred_id, color='C0', linestyle='dashed', linewidth=lw, alpha=1, label='Prediction')
-plt.plot(pred_time_eval, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
+plt.plot(common_time, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
 plt.legend(loc='lower left', frameon=True)
 plt.xlabel('Time (s)')
 plt.ylabel('Index')

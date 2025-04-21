@@ -51,11 +51,11 @@ mem_data_train = mem_data[:train_size]
 processed_train_inputs = preprocessor.process(mem_time_train, mem_data_train)
 print("dt = ", preprocessor.dt_new)
 
+preprocessor.save_state(output_dir + '/checkpoints' + '/LSTMOG_normalizer.pkl')
+
 my_dataset = MyDataset(processed_train_inputs, seq_len)
 
 train_loader = DataLoader(my_dataset, batch_size=batch_size, shuffle=True)
-
-preprocessor.save_state(output_dir + '/checkpoints' + '/LSTMOG_normalizer.pkl')
 
 model = MyLSTM(InFeatures=1,
                 OutFeatures=1,
