@@ -16,8 +16,7 @@ class MyLSTM(nn.Module):
                             batch_first=True)
         self.linear = MLP_liststyle(HiddenDim, OutFeatures, [FeedForwardDim], nonlinearity)
 
-    def forward(self, x):
-        x, _ = self.lstm(x)
+    def forward(self, x, hidden=None):
+        x, h = self.lstm(x, hidden)
         x = self.linear(x)
-        return x
-
+        return x, h

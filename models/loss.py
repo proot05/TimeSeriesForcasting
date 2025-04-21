@@ -11,7 +11,7 @@ class CombinedLoss(nn.Module):
         self.high_dilation = high_dilation
 
         # Define the same kernel for both low and high derivatives
-        kernel = torch.tensor([[-1.0, -1.0, 0.0, 1.0, 1.0]], dtype=torch.float32).view(1, 1, 5)
+        kernel = torch.tensor([[-1.0, -1.0, -1.0, 0.0, 1.0, 1.0, 1.0]], dtype=torch.float32).view(1, 1, 7)
         self.register_buffer("derivative_kernel_low", kernel)
         self.register_buffer("derivative_kernel_high", kernel)  # same values, but applied with dilation
 
@@ -20,7 +20,7 @@ class CombinedLoss(nn.Module):
             x = x.unsqueeze(-1)  # (B, T) → (B, T, 1)
         x = x.transpose(1, 2)    # (B, F, T)
         kernel = self.derivative_kernel_low.to(x.device)
-        dx = F.conv1d(x, kernel, padding=2)  # padding=2 for 5-element kernel
+        dx = F.conv1d(x, kernel, padding=3)  # padding=2 for 5-element kernel
         dx = dx.transpose(1, 2)  # (B, T, F)
         return dx.squeeze(-1) if dx.shape[-1] == 1 else dx
 

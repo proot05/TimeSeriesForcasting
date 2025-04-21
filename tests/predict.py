@@ -3,6 +3,8 @@ import numpy as np
 import torch
 import math
 
+
+@torch.no_grad()
 def predict(model, indtime_history, ind_history, dt_new, rnn_delay, seq_len, device, x_normalizer=None):
 
     # interpolation
@@ -12,26 +14,30 @@ def predict(model, indtime_history, ind_history, dt_new, rnn_delay, seq_len, dev
 
     history = ind_acquired_new[..., None][-seq_len:]
 
-    deltat = rnn_delay * dt_new
-    matched_idx, pred = predict_data(model, device, history, deltat, dt_new=dt_new, seq_len=seq_len, x_normalizer=x_normalizer)
+    # calculate inference length
+    steps = math.ceil(rnn_delay / dt_new)
+    ratio = (rnn_delay - dt_new*(steps - 1)) / dt_new
 
-    return matched_idx, deltat
+    # print("loops: ", steps)
+    # print("dt: ", dt_new)
 
+    init = torch.tensor(history[-seq_len:], dtype=torch.float32)
+    init_n = x_normalizer.normalize(init).to(device)  # <seq_len, 1>
+    total = seq_len + steps
+    predicted_data = torch.empty((total, 1), device=device)
+    predicted_data[:seq_len] = init_n
 
-def predict_data(model, device, history, deltat, dt_new, seq_len, x_normalizer=None):
+    hidden = None
+    for i in range(steps):
+        window = predicted_data[i:i+seq_len].unsqueeze(0)
+        output, hidden = model(window, hidden)  # <B,L,C>
+        predicted_data[seq_len + i] = output[0, -1]
 
-    with torch.no_grad():
-        # calculate inference length
-        steps = math.ceil(deltat / dt_new)
-        ratio = np.remainder(deltat, dt_new) / dt_new
-        predicted_data = x_normalizer.normalize(torch.tensor(history[-seq_len:], dtype=torch.float32))  # <seq_len, 1>
+    predicted_data_denorm = x_normalizer.denormalize(predicted_data).detach().cpu().numpy()
 
-        for i in range(steps):
-            output = model(predicted_data.unsqueeze(0).to(device))  # <B,L,C>
-            predicted_data = torch.cat((predicted_data, output[0, -1].unsqueeze(-1).detach().cpu()), dim=0)
-    predicted_data_denorm = x_normalizer.denormalize(predicted_data).numpy()
+    if rnn_delay == 0:
+        return int(predicted_data_denorm[-1])
 
     pred_idx = int((1 - ratio) * predicted_data_denorm[-2] + ratio * predicted_data_denorm[-1])
-    # pred_idx = int(predicted_data_denorm[-1])
 
-    return pred_idx, predicted_data_denorm
+    return pred_idx

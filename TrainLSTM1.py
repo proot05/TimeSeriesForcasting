@@ -7,8 +7,15 @@ import torch
 from tqdm import tqdm
 from data.preprocess import MyDatasetAutoregress, MembraneDataLoader, TimeSeriesPreprocessor
 from train.train import test_rollout_autoregress, train_regular_transformer_autoregress
+from data.evaluate import percent_variance_explained
 from models.lstm1 import MyLSTM
 from models.loss import CombinedLoss
+import pylab
+import numpy as np
+
+params = {'legend.fontsize': 25, 'axes.labelsize': 25, 'axes.titlesize': 25, 'xtick.labelsize': 25,
+          'ytick.labelsize': 25}
+pylab.rcParams.update(params)
 
 # load GPU
 device = torch.device('cuda')
@@ -24,14 +31,14 @@ if ose(output_dir):
     shutil.rmtree(output_dir)
 os.mkdir(output_dir)
 os.mkdir(output_dir + '/data')
-os.mkdir(output_dir + '/figs')
-os.mkdir(output_dir + '/meshes')
+os.mkdir(output_dir + '/window_results')
+os.mkdir(output_dir + '/errors')
 os.mkdir(output_dir + '/checkpoints')
 os.mkdir(output_dir + '/inference')
 
 # parameters
 train_size = 2000
-seq_len = 400
+seq_len = 200
 batch_size = 16
 forward_pred = 20
 
@@ -42,12 +49,13 @@ mem_time_train = mem_time[:train_size]
 mem_data_train = mem_data[:train_size]
 
 processed_train_inputs = preprocessor.process(mem_time_train, mem_data_train)
+print("dt = ", preprocessor.dt_new)
 
 preprocessor.save_state(output_dir + '/checkpoints' + '/LSTM1_normalizer.pkl')
 
 my_dataset = MyDatasetAutoregress(processed_train_inputs, seq_len, forward_pred)
 
-train_loader = DataLoader(my_dataset, batch_size=batch_size, shuffle=True)
+train_loader = DataLoader(my_dataset, batch_size=batch_size, shuffle=False)
 
 model = MyLSTM(InFeatures=1,
                 OutFeatures=1,
@@ -63,7 +71,7 @@ total_params = sum(p.numel() for p in model.parameters())
 print(f"Number of parameters: {total_params}")
 
 # training parameters
-epochs = 51
+epochs = 31 # 51
 lr = 1e-4
 save_interval = (epochs - 1)/5
 gamma = 0.999
@@ -80,18 +88,20 @@ for epoch in tqdm(range(epochs)):
 
     temp_error = train_regular_transformer_autoregress(model, device, train_loader, optimizer, criterion, forward_pred,
                                                        scheduler=scheduler,
-                                                       x_normalizer=preprocessor.normalizer, epoch=epoch, output_dir=output_dir,
+                                                       epoch=epoch, output_dir=output_dir,
                                                        save_interval=save_interval)
     train_ins_error.append(temp_error.detach().cpu())
 
     if (epoch % save_interval == 0) and True:
         fig, ax = plt.subplots(figsize=(10, 8))
-        lw = 1
+        lw = 3
         ax.plot(train_ins_error, color='C0', linestyle='solid', linewidth=lw, alpha=1, label='L_b_fit')
         ax.set_yscale('log')
-        leg = ax.legend(loc='upper right', frameon=True)
-        leg.get_frame().set_edgecolor('black')
-        fig.savefig(output_dir + '/figs/train_error_epoch{:d}.png'.format(epoch), bbox_inches='tight')
+        # leg = ax.legend(loc='lower left', frameon=True)
+        # leg.get_frame().set_edgecolor('black')
+        ax.set_xlabel('Epoch')
+        ax.set_ylabel('Loss')
+        fig.savefig(output_dir + '/errors/train_error_epoch{:d}.png'.format(epoch), bbox_inches='tight')
 
         # save your model
         error1 = torch.stack(train_ins_error)
@@ -108,19 +118,29 @@ for epoch in tqdm(range(epochs)):
 
         # plot out the prediction results
         pick_channel = 0
-        # plot out the enery distribution
-        fig, ax = plt.subplots(figsize=(10, 8))
-        lw = 1
+        # plot out the energy distribution
+        fig, ax = plt.subplots(figsize=(20, 16))
+        lw = 3
 
-        ax.plot(gt.numpy()[:, pick_channel], color='C0', linestyle='solid', linewidth=lw, alpha=1, label='gt')
-        ax.plot(pred.numpy()[:, pick_channel], color='C1', linestyle='solid', linewidth=lw, alpha=1,
-                label='prediction')
-        ax.plot(pred.numpy()[:, pick_channel] - gt.numpy()[:, pick_channel], color='C2', linestyle='solid',
-                linewidth=lw, alpha=1, label='difference')
-        leg = ax.legend(loc='lower right', frameon=True)
+        ax.plot(gt.numpy()[:, pick_channel], color='C0', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
+        ax.plot(pred.numpy()[:, pick_channel], color='C1', linestyle='dashdot', linewidth=lw, alpha=1,
+                label='Prediction')
+
+        error = pred.numpy()[:, pick_channel] - gt.numpy()[:, pick_channel]
+
+        average_error = np.mean(np.abs(error))
+        print(f"Average Absolute Error: {average_error:.4f}")
+
+        pct_var = percent_variance_explained(pred, gt)
+        print(f"Variance explained: {pct_var:.2f}%")
+
+        ax.plot(error, color='C2', linestyle='solid',
+                linewidth=lw, alpha=1, label='Difference')
+        leg = ax.legend(loc='lower left', frameon=True)
         leg.get_frame().set_edgecolor('black')
-        ax.set_xlabel('time')
-        ax.set_ylabel('coefficients')
+        ax.set_xlabel('Time (s)')
+        ax.set_ylabel('Index')
+        plt.title(f'Average Absolute Error = {average_error:.2f}, Variance explained: {pct_var:.2f}%')
         fig.savefig(output_dir + '/inference/rollout_epoch{:d}.png'.format(epoch), bbox_inches='tight')
         pick_channel = 1
 
