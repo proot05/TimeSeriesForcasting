@@ -9,12 +9,10 @@ def train_regular_transformer(model, device, train_loader, optimizer, criterion,
     for batch_idx, batch in enumerate(train_loader):
         inputs = batch['input']
         labels = batch['output']
-        if x_normalizer is not None:
-            inputs = x_normalizer.normalize(inputs)
-            labels = x_normalizer.normalize(labels)
+
         inputs = inputs.to(device)
         labels = labels.to(device)
-        output = model(inputs)
+        output, _ = model(inputs,None)
         loss = criterion(output[:,-1,:], labels[:,-1,:])
         optimizer.zero_grad()
         loss.backward()
@@ -33,7 +31,7 @@ def train_regular_transformer(model, device, train_loader, optimizer, criterion,
             ax.set_xlabel('time')
             ax.set_ylabel('coefficients')
             ax.set_title(str(loss.item()))
-            fig.savefig(output_dir+'/figs/temp_data_epoch{:d}.png'.format(epoch),bbox_inches='tight' )
+            fig.savefig(output_dir+'/window_results/temp_data_epoch{:d}.png'.format(epoch),bbox_inches='tight' )
 
         if scheduler != None:
             scheduler.step()
@@ -152,9 +150,9 @@ def test_rollout(model, device, data, seq_len = 1,  x_normalizer = None):
     gt_data = data[:seq_len]
     # print(predicted_data.shape, gt_data.shape) #<100,1> <100,1>
     for i in tqdm(range(len(data)-seq_len)):
-        output = model(predicted_data[-seq_len:].unsqueeze(0).to(device)) # <B,L,C>
+        output, _ = model(predicted_data[-seq_len:].unsqueeze(0).to(device), None) # <B,L,C>
         predicted_data = torch.cat((predicted_data,output[0,-1].unsqueeze(-1).detach().cpu()), dim = 0)
-        # print('in testfuncs',gt_data.shape, data[seq_len+i].unsqueeze(-1).detach().cpu().shape)
+        # print('in test',gt_data.shape, data[seq_len+i].unsqueeze(-1).detach().cpu().shape)
         gt_data = torch.cat((gt_data, data[seq_len+i].unsqueeze(-1).detach().cpu()), dim = 0)
     predicted_data_denorm =  x_normalizer.denormalize(predicted_data)
     gt_data_denorm = x_normalizer.denormalize(gt_data)

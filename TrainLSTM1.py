@@ -44,7 +44,7 @@ forward_pred = 20
 
 preprocessor = TimeSeriesPreprocessor(train_size=train_size, seq_len=seq_len, norm_method='ms', norm_dim=0, output_dir=output_dir)
 
-# train and validation split
+# train split
 mem_time_train = mem_time[:train_size]
 mem_data_train = mem_data[:train_size]
 

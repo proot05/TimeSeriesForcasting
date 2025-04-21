@@ -116,6 +116,9 @@ plt.legend(loc='lower left', frameon=True)
 plt.xlabel('Time (s)')
 plt.ylabel('Index')
 plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%')
-# plt.xlim([pred_id_time[-1]-50, pred_id_time[-1]])
 plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
+
+plt.xlim([pred_id_time[-1]-5, pred_id_time[-1]])
+plt.savefig(output_dir + '/prediction_zoom.png', bbox_inches='tight')
+
 plt.close()

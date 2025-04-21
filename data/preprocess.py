@@ -184,10 +184,8 @@ class MyDataset(Dataset):
     def __init__(self, inputs, n_seq1):
         self.inputs = inputs
         self.n_seq1 = n_seq1
-
     def __len__(self):
         return len(self.inputs)-self.n_seq1
-
     def __getitem__(self, idx):
         return {'input':self.inputs[idx:int(idx+self.n_seq1)],
                 'output':self.inputs[idx+1:int(idx+self.n_seq1)+1]}
