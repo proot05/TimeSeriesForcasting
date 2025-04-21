@@ -124,7 +124,7 @@ plt.figure(figsize=(30*multp, 24*multp))
 lw = 3*multp
 plt.plot(mem_time_test, mem_data_test, color='C1', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
 plt.plot(pred_id_time, pred_id, color='C0', linestyle='dashed', linewidth=lw, alpha=1, label='Prediction')
-plt.plot(pred_time_eval, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
+plt.plot(common_time, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
 plt.legend(loc='lower left', frameon=True)
 plt.xlabel('Time (s)')
 plt.ylabel('Index')
