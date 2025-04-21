@@ -142,18 +142,37 @@ def test_rollout_autoregress(model, device, data, seq_len = 1,  x_normalizer = N
 
     return predicted_data_denorm, gt_data_denorm
 
-
-# OLD FUNCTION
 def test_rollout(model, device, data, seq_len = 1,  x_normalizer = None):
     model.eval()
-    predicted_data = data[:seq_len] # x_normalizer.normalize(data[:seq_len])
-    gt_data = data[:seq_len]
-    # print(predicted_data.shape, gt_data.shape) #<100,1> <100,1>
-    for i in tqdm(range(len(data)-seq_len)):
-        output, _ = model(predicted_data[-seq_len:].unsqueeze(0).to(device), None) # <B,L,C>
-        predicted_data = torch.cat((predicted_data,output[0,-1].unsqueeze(-1).detach().cpu()), dim = 0)
-        # print('in test',gt_data.shape, data[seq_len+i].unsqueeze(-1).detach().cpu().shape)
-        gt_data = torch.cat((gt_data, data[seq_len+i].unsqueeze(-1).detach().cpu()), dim = 0)
-    predicted_data_denorm =  x_normalizer.denormalize(predicted_data)
-    gt_data_denorm = x_normalizer.denormalize(gt_data)
+
+    data_dev = data.to(device)
+    total = data_dev.shape[0]
+
+    predicted_data = torch.empty((total, 1), device=device)
+    predicted_data[:seq_len] = data_dev[:seq_len]
+
+    for i in tqdm(range(total-seq_len-1)):
+        output, _ = model(data_dev[i:i+seq_len].unsqueeze(0), None)  # <B,L,C>
+        predicted_data[i + seq_len] = output[0, -1]
+
+    predicted_cpu = predicted_data.detach().cpu()
+    predicted_data_denorm = x_normalizer.denormalize(predicted_cpu)
+    gt_data_denorm = x_normalizer.denormalize(data)
+
     return predicted_data_denorm, gt_data_denorm
+
+
+# OLD FUNCTION
+# def test_rollout(model, device, data, seq_len = 1,  x_normalizer = None):
+#     model.eval()
+#     predicted_data = data[:seq_len] # x_normalizer.normalize(data[:seq_len])
+#     gt_data = data[:seq_len]
+#     # print(predicted_data.shape, gt_data.shape) #<100,1> <100,1>
+#     for i in tqdm(range(len(data)-seq_len)):
+#         output, _ = model(predicted_data[-seq_len:].unsqueeze(0).to(device), None) # <B,L,C>
+#         predicted_data = torch.cat((predicted_data,output[0,-1].unsqueeze(-1).detach().cpu()), dim = 0)
+#         # print('in test',gt_data.shape, data[seq_len+i].unsqueeze(-1).detach().cpu().shape)
+#         gt_data = torch.cat((gt_data, data[seq_len+i].unsqueeze(-1).detach().cpu()), dim = 0)
+#     predicted_data_denorm =  x_normalizer.denormalize(predicted_data)
+#     gt_data_denorm = x_normalizer.denormalize(gt_data)
+#     return predicted_data_denorm, gt_data_denorm

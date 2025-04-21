@@ -9,7 +9,7 @@ import shutil
 import os
 import numpy as np
 from scipy.interpolate import interp1d
-from data.evaluate import percent_variance_explained, smape
+from data.evaluate import percent_variance_explained, smape, high_freq_snr
 import pylab
 
 device = torch.device('cuda')
@@ -51,14 +51,16 @@ print(f"Number of parameters: {total_params}")
 model.eval()
 
 # ~9 Hz sampled data (from the training data sample)
-# loader = MembraneDataLoader(date="4-17-25", frequency=0.67, number=1)
+# freq = 0.67
+# loader = MembraneDataLoader(date="4-17-25", frequency=freq, number=1)
 # mem_time, mem_data = loader.load_data()
 # buffer = 2000
 # mem_time_test = mem_time[-(seq_len+buffer):]
 # mem_data_test = mem_data[-(seq_len+buffer):]
 
 # ~40 Hz sampled data (same as training but from a different sample than the training data)
-loader = MembraneDataLoader(date="4-17-25", frequency=0.67, number=2)
+freq = 0.67
+loader = MembraneDataLoader(date="4-17-25", frequency=freq, number=2)
 mem_time, mem_data = loader.load_data()
 mem_time_test = mem_time[:train_size]
 mem_data_test = mem_data[:train_size]
@@ -106,6 +108,11 @@ print(f"R² % = {pct_var1:.2f}%")
 pct_var2 = smape(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32))
 print(f"SMAPE = {pct_var2:.2f}%")
 
+fs = 1.0 / (common_time[1] - common_time[0])  # sampling rate in Hz
+cutoff = freq
+snr_hf = high_freq_snr(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32), fs, cutoff)
+print(f"High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB")
+
 # Plotting
 plt.figure(figsize=(30*multp, 24*multp))
 lw = 3*multp
@@ -115,7 +122,7 @@ plt.plot(pred_time_eval, error, color='C2', linestyle='solid', linewidth=lw, alp
 plt.legend(loc='lower left', frameon=True)
 plt.xlabel('Time (s)')
 plt.ylabel('Index')
-plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%')
+plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB')
 plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
 
 plt.xlim([pred_id_time[-1]-5, pred_id_time[-1]])

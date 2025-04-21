@@ -1,5 +1,45 @@
 import torch
 
+
+def highpass_tensor(x: torch.Tensor, fs: float, cutoff: float) -> torch.Tensor:
+    N = x.shape[-1]
+    # Compute real FFT
+    Xf = torch.fft.rfft(x)
+    # Frequency bins
+    freqs = torch.fft.rfftfreq(n=N, d=1/fs, device=x.device)
+    # Zero out anything below cutoff
+    mask = freqs >= cutoff
+    Xf = Xf * mask
+    # Inverse FFT back to time domain
+    x_hp = torch.fft.irfft(Xf, n=N)
+    return x_hp
+
+def high_freq_snr(pred: torch.Tensor, gt: torch.Tensor, fs: float, cutoff: float) -> float:
+    """
+    Compute SNR of the high‑pass component above `cutoff` Hz,
+    for torch.Tensor inputs.
+
+    pred, gt : torch.Tensor of shape (..., N)
+    fs        : sampling rate in Hz
+    cutoff    : high‑pass cutoff frequency in Hz
+    """
+    # flatten both signals
+    p = pred.contiguous().view(-1)
+    g = gt.contiguous().view(-1)
+
+    # high‑pass filter
+    y_hf = highpass_tensor(g,  fs, cutoff)
+    yhat_hf = highpass_tensor(p, fs, cutoff)
+
+    # signal and noise powers
+    P_signal = torch.mean(y_hf**2)
+    P_noise = torch.mean((y_hf - yhat_hf)**2)
+
+    # SNR in dB
+    snr_db = 10 * torch.log10(P_signal / (P_noise + 1e-12))
+    return snr_db.item()
+
+
 def percent_variance_explained(pred: torch.Tensor, gt: torch.Tensor) -> float:
     """
     pred, gt: shape (T,) or (T,C), same dtype (float).

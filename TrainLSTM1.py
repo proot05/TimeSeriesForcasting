@@ -7,7 +7,7 @@ import torch
 from tqdm import tqdm
 from data.preprocess import MyDatasetAutoregress, MembraneDataLoader, TimeSeriesPreprocessor
 from train.train import test_rollout_autoregress, train_regular_transformer_autoregress
-from data.evaluate import percent_variance_explained, smape
+from data.evaluate import percent_variance_explained, smape, high_freq_snr
 from models.lstm1 import MyLSTM
 from models.loss import CombinedLoss
 import pylab
@@ -21,7 +21,8 @@ pylab.rcParams.update(params)
 device = torch.device('cuda')
 
 # load data from desired location in dataset folder
-loader = MembraneDataLoader(date="4-17-25", frequency=0.67, number=1)
+freq = 0.67
+loader = MembraneDataLoader(date="4-17-25", frequency=freq, number=1)
 mem_time, mem_data = loader.load_data()
 
 # set up the output directory
@@ -129,6 +130,11 @@ for epoch in tqdm(range(epochs)):
         pct_var2 = smape(pred, gt)
         print(f"SMAPE = {pct_var2:.2f}%")
 
+        fs = 1.0 / preprocessor.dt_new  # sampling rate in Hz
+        cutoff = freq
+        snr_hf = high_freq_snr(gt, pred, fs, cutoff)
+        print(f"High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB")
+
         # plot out the prediction results
         # plot out the energy distribution
         fig, ax = plt.subplots(figsize=(20, 16))
@@ -141,7 +147,7 @@ for epoch in tqdm(range(epochs)):
         leg.get_frame().set_edgecolor('black')
         ax.set_xlabel('Time (s)')
         ax.set_ylabel('Index')
-        plt.title(f'Epoch {epoch}: MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, Loss = {temp_error.detach().cpu():.4f}')
+        plt.title(f'Epoch {epoch}: MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, Loss = {temp_error.detach().cpu():.4f}, High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB')
         fig.savefig(output_dir + '/inference/rollout_epoch{:d}.png'.format(epoch), bbox_inches='tight')
         pick_channel = 1
 
