@@ -30,7 +30,7 @@ state = TimeSeriesPreprocessor.load_state(input_dir + '/checkpoints' + '/LSTM1_n
 new_dt = state['dt_new']
 x_normalizer = state['normalizer']
 seq_len = state['seq_len']
-train_size = 2000 # state['train_size']
+train_size = state['train_size']
 
 checkpoint = torch.load(input_dir + '/checkpoints' + '/checkpoint_50.pt', map_location=device)
 

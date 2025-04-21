@@ -130,7 +130,8 @@ class TimeSeriesPreprocessor:
         state = {
             'dt_new': self.dt_new,
             'seq_len': self.seq_len,
-            'normalizer': self.normalizer
+            'normalizer': self.normalizer,
+            'train_size': self.train_size
         }
         with open(path, 'wb') as f:
             pickle.dump(state, f)
