@@ -62,11 +62,11 @@ where:
 The R² % quantifies how much of the global variability in the ground truth the model captures. A high R²% means the predictions are accurate for the global behavior of the ground truth. The R² % was 
 calculated as:
 
-$$
+```math
 R^{2} \;=\; 1 \;-\; \frac{\displaystyle\sum_{i=1}^{N} \bigl(y_{i} - \hat{y}_{i}\bigr)^{2}}{\displaystyle\sum_{i=1}^{N} \bigl(y_{i} - \bar{y}\bigr)^{2}}
 \quad,\quad
 R^{2}\%  \;=\; 100 \times R^{2}
-$$
+```
 
 where:
 - $N$ is the number of samples,  
@@ -77,11 +77,11 @@ where:
 ### SMAPE
 The SMAPE measures point‑wise, relative accuracy in a scale‑aware, symmetric way. A low SMAPE means the predictions are accurate for the local behavior of the ground truth. The SMAPE was calculated as:
 
-$$
+```math
 \mathrm{SMAPE} \;=\; \frac{100\%}{N}\sum_{i=1}^{N}
 \frac{\bigl\lvert \hat{y}_{i} - y_{i}\bigr\rvert}
      {\tfrac{1}{2}\bigl(\lvert \hat{y}_{i}\rvert + \lvert y_{i}\rvert\bigr)}
-$$
+```
 
 where:
 - $N$ is the number of samples,  
@@ -93,7 +93,7 @@ The high‑pass SNR quantifies in decibels how much power the true signal’s hi
 in that same band. Higher SNR values indicate stronger preservation of the high‑frequency band relative to the prediction error, for example an SNR of 20 dB means the ground truth high‑frequency power 
 is 100 times greater than the error power, reflecting excellent fidelity. The high‑pass SNR was calculated as:
 
-$$
+```math
 \mathrm{SNR}_{\mathrm{hp}}(f_c)
 \;=\;
 10 \log_{10}
@@ -101,7 +101,7 @@ $$
 \frac{\tfrac{1}{N}\sum_{i=1}^N y_{\mathrm{hp},i}^2}
      {\tfrac{1}{N}\sum_{i=1}^N \bigl(y_{\mathrm{hp},i} - \hat y_{\mathrm{hp},i}\bigr)^2}
 \biggr)
-$$
+```
 
 where:
 - $y_{\mathrm{hp},i}$ and $\hat y_{\mathrm{hp},i}$ are the ground‑truth and predicted values after high‑pass filtering above cutoff frequency $f_c$,  
