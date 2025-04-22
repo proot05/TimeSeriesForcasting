@@ -159,7 +159,8 @@ rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-9-25\1\lists.p
 This model represents my efforts to rebuild the training, evaluation, and prediction functions to fix errors and produce better performance. It uses the exact [training](#model-training-workflow) and 
 [validation](#model-validation-workflow) workflows detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and output 
 interpolation. Some additional adjustments were made to better handle memory allocation and to limit the passing of data between the cpu and gpu in order to try to minimize the computational cost 
-of predictions.
+of predictions. The model was trained on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/1/lists.pkl) 
+and validated on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-9-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
 
 <table>
   <tr>
