@@ -142,11 +142,11 @@ handle normalization and have a poor method of interpolating predicted data at p
 <table>
   <tr>
     <td align="center">
-      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300px" alt="New LSTM Validation"><br>
+      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="630px" alt="New LSTM Validation"><br>
       <sub>New LSTM Validation</sub>
     </td>
     <td align="center">
-      <img src="testfuncs/test_output/LSTM1/prediction.png" width="300px" alt="Old LSTM Validation"><br>
+      <img src="testfuncs/test_output/LSTM1/prediction.png" width="550px" alt="Old LSTM Validation"><br>
       <sub>Old LSTM Validation</sub>
     </td>
   </tr>
