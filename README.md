@@ -142,7 +142,7 @@ handle normalization and have a poor method of interpolating predicted data at p
 <table>
   <tr>
     <td align="center">
-      <img src="train/train_output/LSTMOG/inference/rollout_epoch50.png" width="630px" alt="Training"><br>
+      <img src="train/train_output/LSTMOG/inference/rollout_epoch50.png" width="725px" alt="Training"><br>
       <sub>Training</sub>
     </td>
     <td align="center">
@@ -162,7 +162,7 @@ of predictions.
 <table>
   <tr>
     <td align="center">
-      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="630px" alt="Training"><br>
+      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="725px" alt="Training"><br>
       <sub>Training</sub>
     </td>
     <td align="center">
