@@ -130,8 +130,8 @@ resampled time step, an extra autoregressive output is produced and the predicte
 
 ## Run Instructions
 To run the trained neural network on a validation sample, open and run the TestLSTM1.py file. It will run the predictions in the manner detailed in the last section and plot the ground truth
-data, predicted data, and error as a function of time, with the performance metrics listed in the title. The plots, one of the entirety of the data and one of the last six seconds of data, will 
-be saved in the \TimeSeriesForcasting\testfuncs\test_output\LSTM1 folder.
+data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The plots, one of the entirety of the data 
+and one of the last six seconds of data, will be saved in the \TimeSeriesForcasting\testfuncs\test_output\LSTM1 folder and can be seen in the [Current Model Performance Update](#Current Model Performance Update).
 
 ## First Model Performance Update
 The initial backbone of the model developed in this project was started by a former student in my lab and was completed and improved upon by myself. This first update represents the 
@@ -140,7 +140,8 @@ resampled time step into the future. The loss function was only MSE and it used 
 handle normalization and have a poor method of interpolating predicted data at predictions times into the future that were not multiples of the resampled time step.
 
 ## Current Model Performance Update
-This model uses the exact training and validation workflows detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and 
-output interpolation.
+This model represents my efforts to rebuild the training, evaluation, and prediction functions to fix errors and produce better performance. It uses the exact training and validation workflows 
+detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and output interpolation. Some additional adjustments were made to 
+better handle memory allocation and to limit the passing of data between the cpu and gpu in order to try to minimize the computational cost of predictions.
 
 ## Discussion
