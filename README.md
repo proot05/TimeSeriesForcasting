@@ -63,8 +63,8 @@ resampled time step, an extra autoregressive output is produced and the predicte
 
 ## Run Instructions
 To run the trained neural network on a validation sample, open and run the TestLSTM1.py file. It will run the predictions in the manner detailed in the last section and plot the ground truth
-data, predicted data, and error as a function of time, with the performance metrics listed in the title. The plots, one of the entirety of the data and one of the last six seconds of data in
-testfuncs>test_output>LSTM1 folder.
+data, predicted data, and error as a function of time, with the performance metrics listed in the title. The plots, one of the entirety of the data and one of the last six seconds of data, will 
+be saved in the \TimeSeriesForcasting\testfuncs\test_output\LSTM1 folder.
 
 ## First Update
 The initial backbone of the model developed in this project was started by a former student in my lab and was completed and improved upon by myself. This first update represents the 
