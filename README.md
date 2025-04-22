@@ -58,7 +58,7 @@ where:
 - $\hat{y}_{i}$ is the predicted value for sample $i$,  
 - $y_{i}$ is the ground‑truth value for sample $i$. 
 
-### R² % {#r2pct}
+### R² %
 The R² % quantifies how much of the global variability in the ground truth the model captures. A high R²% means the predictions are accurate for the global behavior of the ground truth. The R² % was 
 calculated as:
 
