@@ -139,7 +139,7 @@ combination of our efforts and the state of the model midway through the semeste
 resampled time step into the future. The loss function was only MSE and it used a relu activation function after the first linear layer. Additionally, the model was found to improperly 
 handle normalization and have a poor method of interpolating predicted data at predictions times into the future that were not multiples of the resampled time step. The model was trained 
 on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/1/lists.pkl) and validated on the high sampling 
-rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-9-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
+rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\2\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
 
 <table>
   <tr>
@@ -160,7 +160,7 @@ This model represents my efforts to rebuild the training, evaluation, and predic
 [validation](#model-validation-workflow) workflows detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and output 
 interpolation. Some additional adjustments were made to better handle memory allocation and to limit the passing of data between the cpu and gpu in order to try to minimize the computational cost 
 of predictions. The model was trained on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/1/lists.pkl) 
-and validated on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-9-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
+and validated on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\2\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
 
 <table>
   <tr>
