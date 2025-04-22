@@ -137,7 +137,9 @@ and one of the last six seconds of data, will be saved in the [\TimeSeriesForcas
 The initial backbone of the model developed in this project was started by a former student in my lab and was completed and improved upon by myself. This first update represents the 
 combination of our efforts and the state of the model midway through the semester. This model does not use autoregressive outputs in the training, instead only computing the loss on one
 resampled time step into the future. The loss function was only MSE and it used a relu activation function after the first linear layer. Additionally, the model was found to improperly 
-handle normalization and have a poor method of interpolating predicted data at predictions times into the future that were not multiples of the resampled time step.
+handle normalization and have a poor method of interpolating predicted data at predictions times into the future that were not multiples of the resampled time step. The model was trained 
+on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/1/lists.pkl) and validated on the high sampling 
+rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-9-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
 
 <table>
   <tr>
