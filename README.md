@@ -140,7 +140,7 @@ resampled time step into the future. The loss function was only MSE and it used 
 handle normalization and have a poor method of interpolating predicted data at predictions times into the future that were not multiples of the resampled time step.
 
 ## Current Model Performance Update
-This model represents my efforts to rebuild the training, evaluation, and prediction functions to fix errors and produce better performance. It uses the exact training and validation workflows 
+This model represents my efforts to rebuild the training, evaluation, and prediction functions to fix errors and produce better performance. It uses the exact [training](#model-training-workflow) and validation workflows 
 detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and output interpolation. Some additional adjustments were made to 
 better handle memory allocation and to limit the passing of data between the cpu and gpu in order to try to minimize the computational cost of predictions.
 
