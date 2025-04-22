@@ -49,7 +49,7 @@ preprocessor = TimeSeriesPreprocessor(train_size=train_size, seq_len=seq_len, no
 mem_time_train = mem_time[:train_size]
 mem_data_train = mem_data[:train_size]
 
-processed_train_inputs = preprocessor.process(mem_time_train, mem_data_train)
+processed_train_inputs, time = preprocessor.process(mem_time_train, mem_data_train)
 print("dt = ", preprocessor.dt_new)
 
 preprocessor.save_state(output_dir + '/checkpoints' + '/LSTM1_normalizer.pkl')
@@ -140,9 +140,9 @@ for epoch in tqdm(range(epochs)):
         fig, ax = plt.subplots(figsize=(20, 16))
         lw = 3
 
-        ax.plot(gt.numpy()[:, pick_channel], color='C0', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
-        ax.plot(pred.numpy()[:, pick_channel], color='C1', linestyle='dashdot', linewidth=lw, alpha=1, label='Prediction')
-        ax.plot(error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
+        ax.plot(time, gt.numpy()[:, pick_channel], color='C0', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
+        ax.plot(time, pred.numpy()[:, pick_channel], color='C1', linestyle='dashdot', linewidth=lw, alpha=1, label='Prediction')
+        ax.plot(time, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
         leg = ax.legend(loc='lower left', frameon=True)
         leg.get_frame().set_edgecolor('black')
         ax.set_xlabel('Time (s)')

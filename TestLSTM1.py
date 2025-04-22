@@ -135,4 +135,4 @@ plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
 plt.xlim([pred_id_time[-1]-5, pred_id_time[-1]])
 plt.savefig(output_dir + '/prediction_zoom.png', bbox_inches='tight')
 
-
+plt.close()

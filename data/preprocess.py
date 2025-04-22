@@ -49,7 +49,7 @@ class TimeSeriesPreprocessor:
         self,
         indtime_history: Sequence[float],
         ind_history: Sequence[float],
-    ) -> torch.Tensor:
+    ) -> (torch.Tensor, list):
         """
         Slice out the last `train_size` points, interpolate them to
         uniform times, compute dt_new, normalize, and store results.
@@ -119,7 +119,7 @@ class TimeSeriesPreprocessor:
         fig.savefig(data_dir / 'normalized_data.png', bbox_inches='tight')
         plt.close()
 
-        return self.dataset_inputs_n
+        return self.dataset_inputs_n, ind_times_new
 
     def save_state(self, path: Union[str, Path]):
         """

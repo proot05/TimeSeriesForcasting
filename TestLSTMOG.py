@@ -15,7 +15,7 @@ import math
 
 device = torch.device('cuda')
 
-multp = 6
+multp = 1
 params = {'legend.fontsize': 25*multp, 'axes.labelsize': 25*multp, 'axes.titlesize': 25*multp, 'xtick.labelsize': 25*multp,
           'ytick.labelsize': 25*multp}
 pylab.rcParams.update(params)
@@ -120,14 +120,16 @@ snr_hf = high_freq_snr(torch.tensor(preds_data_interp, dtype=torch.float32), tor
 print(f"High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB")
 
 # Plotting
-plt.figure(figsize=(30*multp, 24*multp))
-lw = 3*multp
-plt.plot(mem_time_test, mem_data_test, color='C1', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
-plt.plot(pred_id_time, pred_id, color='C0', linestyle='dashed', linewidth=lw, alpha=1, label='Prediction')
-plt.plot(common_time, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
-plt.legend(loc='lower left', frameon=True)
-plt.xlabel('Time (s)')
-plt.ylabel('Index')
+fig, ax = plt.subplots(figsize=(20, 16))
+lw = 3
+
+ax.plot(mem_time_test, mem_data_test, color='C0', linestyle='solid', linewidth=lw, alpha=1, label='Ground Truth')
+ax.plot(pred_id_time, pred_id, color='C1', linestyle='dashdot', linewidth=lw, alpha=1, label='Prediction')
+ax.plot(common_time, error, color='C2', linestyle='solid', linewidth=lw, alpha=1, label='Error')
+leg = ax.legend(loc='lower left', frameon=True)
+leg.get_frame().set_edgecolor('black')
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Index')
 plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB')
 plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
 

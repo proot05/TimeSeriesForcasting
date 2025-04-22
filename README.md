@@ -142,12 +142,12 @@ handle normalization and have a poor method of interpolating predicted data at p
 <table>
   <tr>
     <td align="center">
-      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="630px" alt="New LSTM Validation"><br>
-      <sub>New LSTM Validation</sub>
+      <img src="train/train_output/LSTMOG/inference/rollout_epoch50.png" width="630px" alt="Training"><br>
+      <sub>Training</sub>
     </td>
     <td align="center">
-      <img src="testfuncs/test_output/LSTM1/prediction.png" width="550px" alt="Old LSTM Validation"><br>
-      <sub>Old LSTM Validation</sub>
+      <img src="testfuncs/test_output/LSTMOG/prediction.png" width="630px" alt="Validation"><br>
+      <sub>Validation</sub>
     </td>
   </tr>
 </table>
@@ -158,5 +158,18 @@ This model represents my efforts to rebuild the training, evaluation, and predic
 [validation](#model-validation-workflow) workflows detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and output 
 interpolation. Some additional adjustments were made to better handle memory allocation and to limit the passing of data between the cpu and gpu in order to try to minimize the computational cost 
 of predictions.
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="630px" alt="Training"><br>
+      <sub>Training</sub>
+    </td>
+    <td align="center">
+      <img src="testfuncs/test_output/LSTM1/prediction.png" width="630px" alt="Validation"><br>
+      <sub>Validation</sub>
+    </td>
+  </tr>
+</table>
 
 ## Discussion
