@@ -39,6 +39,72 @@ pip install -r requirements.txt
 ```
 
 ## Performance Metrics
+The point of this project is to accurately predict a time series value at a point in the future given the history of its values. Therefore, we are primarily concerned with how well our predicted 
+time series represents the shape of the ground truth time series, especially around high frequency features where the model has historically struggled. To evaluate the performance, four metrics
+were chosen and calculated between the full predicted trace and ground truth time series. The metrics are the Mean Absolute Error (MAE), percent variance explained (R² %), Symmetric Mean Absolute 
+Percentage Error (SMAPE), and High-Pass (frequencies greater than the first harmonic of the ground truth series) Signal-to-Noise Ratio (SNR).
+
+### MAE
+The MAE gives shows the average absolute deviation of the predictions from the ground truth in the original units (surface state id). Therefore, it gives an idea of how far off the predict surface
+state is from the actual state on average. The MAE was calculated as:
+
+$$
+\mathrm{MAE} \;=\; \frac{1}{N} \sum_{i=1}^{N} \bigl\lvert \hat{y}_{i} - y_{i} \bigr\rvert
+$$
+
+where:
+- $N$ is the number of samples,  
+- $\hat{y}_{i}$ is the predicted value for sample $i$,  
+- $y_{i}$ is the ground‑truth value for sample $i$. 
+
+### R² %
+The R² % quantifies how much of the global variability in the ground truth the model captures. A high R²% means the predictions are accurate for the global behavior of the ground truth. The R² % was 
+calculated as:
+
+$$
+R^{2} \;=\; 1 \;-\; \frac{\displaystyle\sum_{i=1}^{N} \bigl(y_{i} - \hat{y}_{i}\bigr)^{2}}{\displaystyle\sum_{i=1}^{N} \bigl(y_{i} - \bar{y}\bigr)^{2}}
+\quad,\quad
+R^{2}\%  \;=\; 100 \times R^{2}
+$$
+
+where:
+- $N$ is the number of samples,  
+- $\hat{y}_{i}$ is the predicted value for sample $i$,  
+- $y_{i}$ is the ground‑truth value for sample $i$,  
+- $\bar{y} = \frac{1}{N}\sum_{i=1}^N y_i$ is the mean of the ground‑truth values.  
+
+### SMAPE
+The SMAPE measures point‑wise, relative accuracy in a scale‑aware, symmetric way. A low SMAPE means the predictions are accurate for the local behavior of the ground truth. The SMAPE was calculated as:
+
+$$
+\mathrm{SMAPE} \;=\; \frac{100\%}{N}\sum_{i=1}^{N}
+\frac{\bigl\lvert \hat{y}_{i} - y_{i}\bigr\rvert}
+     {\tfrac{1}{2}\bigl(\lvert \hat{y}_{i}\rvert + \lvert y_{i}\rvert\bigr)}
+$$
+
+where:
+- $N$ is the number of samples,  
+- $\hat{y}_{i}$ is the predicted value for sample $i$,  
+- $y_{i}$ is the ground‑truth value for sample $i$.
+
+### High Pass SNR
+The high‑pass SNR quantifies in decibels how much power the true signal’s high‑frequency component, above cutoff $f_c$ (the first harmonic of the ground truth data), has relative to the error power 
+in that same band. Higher SNR values indicate stronger preservation of the high‑frequency band relative to the prediction error, for example an SNR of 20 dB means the ground truth high‑frequency power 
+is 100 times greater than the error power, reflecting excellent fidelity. The high‑pass SNR was calculated as:
+
+$$
+\mathrm{SNR}_{\mathrm{hp}}(f_c)
+\;=\;
+10 \log_{10}
+\biggl(
+\frac{\tfrac{1}{N}\sum_{i=1}^N y_{\mathrm{hp},i}^2}
+     {\tfrac{1}{N}\sum_{i=1}^N \bigl(y_{\mathrm{hp},i} - \hat y_{\mathrm{hp},i}\bigr)^2}
+\biggr)
+$$
+
+where:
+- $y_{\mathrm{hp},i}$ and $\hat y_{\mathrm{hp},i}$ are the ground‑truth and predicted values after high‑pass filtering above cutoff frequency $f_c$,  
+- $N$ is the number of samples.  
 
 
 ## Model Training Workflow 
@@ -66,7 +132,7 @@ To run the trained neural network on a validation sample, open and run the TestL
 data, predicted data, and error as a function of time, with the performance metrics listed in the title. The plots, one of the entirety of the data and one of the last six seconds of data, will 
 be saved in the \TimeSeriesForcasting\testfuncs\test_output\LSTM1 folder.
 
-## First Update
+## First Model Performance Update
 The initial backbone of the model developed in this project was started by a former student in my lab and was completed and improved upon by myself. This first update represents the 
 combination of our efforts and the state of the model midway through the semester. This model does not use autoregressive outputs in the training, instead only computing the loss on one
 resampled time step into the future. The loss function was only MSE and it used a relu activation function after the first linear layer. Additionally, the model was found to improperly 
