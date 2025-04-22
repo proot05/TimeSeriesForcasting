@@ -48,9 +48,9 @@ Percentage Error (SMAPE), and High-Pass (frequencies greater than the first harm
 The MAE gives shows the average absolute deviation of the predictions from the ground truth in the original units (surface state id). Therefore, it gives an idea of how far off the predict surface
 state is from the actual state on average. The MAE was calculated as:
 
-$$
+$
 \mathrm{MAE} \;=\; \frac{1}{N} \sum_{i=1}^{N} \bigl\lvert \hat{y}_{i} - y_{i} \bigr\rvert
-$$
+$
 
 where:
 - $N$ is the number of samples,  
