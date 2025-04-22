@@ -41,8 +41,8 @@ pip install -r requirements.txt
 ## Performance Metrics
 The point of this project is to accurately predict a time series value at a point in the future given the history of its values. Therefore, we are primarily concerned with how well our predicted 
 time series represents the shape of the ground truth time series, especially around high frequency features where the model has historically struggled. To evaluate the performance, four metrics
-were chosen and calculated between the full predicted trace and ground truth time series. The metrics are the Mean Absolute Error ([MAE](#MAE)), percent variance explained ([R² %](#R²-%)), Symmetric Mean Absolute 
-Percentage Error ([SMAPE](#SMAPE)), and High-Pass (frequencies greater than the first harmonic of the ground truth series) Signal-to-Noise Ratio (SNR).
+were chosen and calculated between the full predicted trace and ground truth time series. The metrics are the Mean Absolute Error ([MAE](#MAE)), percent variance explained ([R² %](#r2pct)), Symmetric Mean Absolute 
+Percentage Error ([SMAPE](#SMAPE)), and High-Pass (frequencies greater than the first harmonic of the ground truth series) Signal-to-Noise Ratio ([SNR](#High-Pass-SNR)).
 
 ### MAE
 The MAE gives shows the average absolute deviation of the predictions from the ground truth in the original units (surface state id). Therefore, it gives an idea of how far off the predict surface
@@ -58,7 +58,7 @@ where:
 - $\hat{y}_{i}$ is the predicted value for sample $i$,  
 - $y_{i}$ is the ground‑truth value for sample $i$. 
 
-### R² %
+### R² % {#r2pct}
 The R² % quantifies how much of the global variability in the ground truth the model captures. A high R²% means the predictions are accurate for the global behavior of the ground truth. The R² % was 
 calculated as:
 
@@ -88,7 +88,7 @@ where:
 - $\hat{y}_{i}$ is the predicted value for sample $i$,  
 - $y_{i}$ is the ground‑truth value for sample $i$.
 
-### High Pass SNR
+### High-Pass SNR
 The high‑pass SNR quantifies in decibels how much power the true signal’s high‑frequency component, above cutoff $f_c$ (the first harmonic of the ground truth data), has relative to the error power 
 in that same band. Higher SNR values indicate stronger preservation of the high‑frequency band relative to the prediction error, for example an SNR of 20 dB means the ground truth high‑frequency power 
 is 100 times greater than the error power, reflecting excellent fidelity. The high‑pass SNR was calculated as:
