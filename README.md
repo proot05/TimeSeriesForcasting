@@ -41,8 +41,8 @@ pip install -r requirements.txt
 ## Performance Metrics
 The point of this project is to accurately predict a time series value at a point in the future given the history of its values. Therefore, we are primarily concerned with how well our predicted 
 time series represents the shape of the ground truth time series, especially around high frequency features where the model has historically struggled. To evaluate the performance, four metrics
-were chosen and calculated between the full predicted trace and ground truth time series. The metrics are the Mean Absolute Error (MAE), percent variance explained (R² %), Symmetric Mean Absolute 
-Percentage Error (SMAPE), and High-Pass (frequencies greater than the first harmonic of the ground truth series) Signal-to-Noise Ratio (SNR).
+were chosen and calculated between the full predicted trace and ground truth time series. The metrics are the Mean Absolute Error ([MAE](#MAE)), percent variance explained ([R² %](#R²-%)), Symmetric Mean Absolute 
+Percentage Error ([SMAPE](#SMAPE)), and High-Pass (frequencies greater than the first harmonic of the ground truth series) Signal-to-Noise Ratio (SNR).
 
 ### MAE
 The MAE gives shows the average absolute deviation of the predictions from the ground truth in the original units (surface state id). Therefore, it gives an idea of how far off the predict surface
