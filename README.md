@@ -15,9 +15,9 @@ model with one LSTM layer and two linear layers (the first of which has an activ
 time into the future given an input window of the history of mesh states up to that point.
 
 ## Datasets
-The main datasets used in this project, found in the datasets folder, are time histories of the surface id collected during printing trials.
-There are two different collections of data, one corresponding to the surface state changing with a dominant frequency of 0.67 Hz and one with a
-dominant frequency of 2 Hz. Within the data folders and files there is additional collected data and plots representing different evaluation criteria
+The main datasets used in this project, found in the [datasets](/datasets) folder, are time histories of the surface id collected during printing trials.
+There are two different collections of data, one corresponding to the surface state changing with a dominant frequency of [0.67 Hz](/datasets/0.67%20Hz%20membrane) and one with a
+dominant frequency of [2 Hz](/datasets/2%20Hz%20membrane). Within the data folders and files there is additional collected data and plots representing different evaluation criteria
 of the trial, but we will only be utilizing the surface state time history within the lists.pkl files. Within the surface state time histories, there
 are three distinct sections of collected data corresponding to different depth camera sampling rates. The first section of data corresponds to the highest
 camera sampling rate (~ 40 Hz) and is the data the model will be trained on for a printing trial. The next section is data collected while predictions are being made, 
@@ -129,7 +129,7 @@ and was used for the plots in the two update sections (various prediction times 
 resampled time step, an extra autoregressive output is produced and the predicted point is linearly interpolated between the last two outputs.
 
 ## Run Instructions
-To run the trained neural network on a validation sample, open and run the TestLSTM1.py file. It will run the predictions in the manner detailed in the last section and plot the ground truth
+To run the trained neural network on a validation sample, open and run the [TestLSTM1.py](/TestLSTM1.py) file. It will run the predictions in the manner detailed in the last section and plot the ground truth
 data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The plots, one of the entirety of the data 
 and one of the last six seconds of data, will be saved in the [\TimeSeriesForcasting\testfuncs\test_output\LSTM1](testfuncs/test_output/LSTM1) folder and can be seen in the [Current Model Performance Update](#Current-Model-Performance-Update).
 
