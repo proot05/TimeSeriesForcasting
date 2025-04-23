@@ -194,7 +194,7 @@ training data with a prediction time of 0.0245 s and the old LSTM was trained wi
     <td><img src="testfuncs/test_output/window_eval/plot/R_.png" width="300px" alt="Plot 2"></td>
   </tr>
   <tr>
-    <td><img src="testfuncs/test_output/window_eval/plot/SMAPE_.png" alt="Plot 3"></td>
+    <td><img src="testfuncs/test_output/window_eval/plot/SMAPE_.png" width="300px" alt="Plot 3"></td>
     <td><img src="testfuncs/test_output/window_eval/plot/High_pass_0.67_Hz_SNR_dB_.png" width="300px" alt="Plot 4"></td>
   </tr>
 </table>
