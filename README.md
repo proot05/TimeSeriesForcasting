@@ -141,7 +141,7 @@ handle normalization and have a poor method of interpolating predicted data at p
 on the high sampling rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\1\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/1/lists.pkl) and validated on the high sampling 
 rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\2\lists.pkl](datasets/0.67%20Hz%20membrane/4-17-25/2/lists.pkl).
 
-Specifically, this model struggled to make predictions around high frequency features around the peaks of the ground truth data, as can be seen in this [plot](testfuncs/test_output/LSTM1/prediction_zoom.png). 
+Specifically, this model struggled to make predictions around high frequency features near the peaks of the ground truth data, as can be seen in this [plot](testfuncs/test_output/LSTM1/prediction_zoom.png). 
 The model would round off these features, effectively causing the predicted signal to lag behind the ground truth and not reach a large enough amplitude.
 
 <table>
