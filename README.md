@@ -1,21 +1,29 @@
 # TIme Series Forcasting for On-the-Fly 3D Printer Control
 
 ## Description
-The goal of this project is to improve the LSTM algorithm a six-axis 3D printer uses to predict the state of the surface 
+The goal of this project is to improve the LSTM algorithm used by a six-axis 3D printer to predict the state of the surface 
 to be printed on. To begin this process, a high resolution, low frequency depth camera is used to capture high quality 
 point clouds of the surface at various stages in its relatively periodic motion. The point clouds are processed into high 
 quality meshes, soft correspondence is preformed on them to link points that represent physical locations on the surface 
 between the different mesh states, and the scans are interpolated between to increase the spatial resolution of the possible 
 mesh states. A pattern to be printed is then designed on the mesh state with the least deformation and this pattern is projected 
-onto all the mesh states. Immediately prior printing, a low resolution, high frequency depth camera is used to monitor the current state
+onto all the mesh states. Immediately prior to printing, a low resolution, high frequency depth camera is used to monitor the current state
 of the surface. The camera captures a point cloud of the mesh state, preforms some postprocessing, and finds the id of the high quality
 mesh that best represents the current surface state (has the lowest chamfer loss). The printer observes the shape change of the surface 
 for a period of time, creating a history of mesh states (ids) the surface goes through during that period. That data is used to train a
-model with one LSTM layer and two linear layers (the first of which has an activation function on its output) to predict a mesh state a 
-time into the future given an input window of the history of mesh states up to that point.
+model with one LSTM layer and two linear layers (the first of which has an activation function on its output) to predict a mesh state at a 
+time in the future given an input window of the history of mesh states up to that point.
+
+## Install
+```
+conda create --name TSF python=3.9
+conda activate TSF
+pip install --index-url https://download.pytorch.org/whl/cu116  --no-deps torch==1.13.0+cu116
+pip install -r requirements.txt
+```
 
 ## Datasets
-The main datasets used in this project, found in the [datasets](/datasets) folder, are time histories of the surface id collected during printing trials.
+The main datasets used in this project, found in the [datasets](/datasets) folder, are time histories of the surface ids collected during printing trials.
 There are two different collections of data, one corresponding to the surface state changing with a dominant frequency of [0.67 Hz](/datasets/0.67%20Hz%20membrane) and one with a
 dominant frequency of [2 Hz](/datasets/2%20Hz%20membrane). Within the data folders and files there is additional collected data and plots representing different evaluation criteria
 of the trial, but we will only be utilizing the surface state time history within the lists.pkl files. Within the surface state time histories, there
@@ -29,14 +37,6 @@ on data at a lower sampling rate (still above Nyquist criterion), which presents
 In addition to data collected at different sampling rates and from different trials (both with different and the same surface frequency), the algorithm will be
 tested on data with completely different periodic form than the training data. This data will come from the pydicom example time series datasets, which includes
 electrocardiogram (ECG), respiratory, and audio waveforms collected at a constant sampling frequency.
-
-## Install
-```
-conda create --name TSF python=3.9
-conda activate TSF
-pip install --index-url https://download.pytorch.org/whl/cu116  --no-deps torch==1.13.0+cu116
-pip install -r requirements.txt
-```
 
 ## Performance Metrics
 The point of this project is to accurately predict a time series value at a point in the future given the history of its values. Therefore, we are primarily concerned with how well our predicted 
