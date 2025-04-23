@@ -111,9 +111,9 @@ where:
 ## Model Training Workflow 
 The data for training is first resampled to a constant time step time base and is zero mean and unit variance normalized. The data is then divided into batches,
 where the input is a data sample containing a number of points equal to the value of the variable seq_len (sequence length) and its label is the same collection of data plus a number of additional samples into the future. For training,
-the model receives the sequence length input of original data and is autoregressively (adding an output one time step into the future onto the end of the input data)
+the model receives the input of original data and is autoregressively (adding an output one time step into the future onto the end of the input data)
 used to make the same number of predictions into the future as the labels were established with. The loss is then calculated on all the future autoregressive outputs produced
-for the input sequence length of original data. The loss function is a combination of mean squared error (MSE), a convolutional first derivative (to capture more 
+for the input sample of original data. The loss function is a combination of mean squared error (MSE), a convolutional first derivative (to capture more 
 information regarding the performance around low frequency features), and a dilated convolutional first derivative (to capture more information regarding the performance 
 around high frequency features). Every certain number of epochs, the performance metrics of the model are evaluated on the training data by feeding in a rolling sequence length
 input window of the data and predicting one time step into the future to effectively recreate the ground truth data. In implementation, the time into the future the model needs 
@@ -185,7 +185,7 @@ higher quality than the previous model. If the performance needs to be improved 
 based on a history of its mistakes, specifically around sharp features like the trough. This has begun to be developed in the [QKLMS.py](models/qklms.py) file.
 
 The performance of the models was also evaluated on the validation data for other prediction times into the future besides just 0.25 s, as in the validation data previously displayed, to see 
-how the models will preform if other prediction times are necessary. For the plots below, the new LSTM was trained with autoregressive outputs up to 0.49 s in the future and was tested on the 
+how the models will perform if other prediction times are necessary. For the plots below, the new LSTM was trained with autoregressive outputs up to 0.49 s in the future and was tested on the 
 training data with a prediction time of 0.0245 s and the old LSTM was trained with one output 0.0245 s in the future and was tested on the training data with a prediction time of 0.0245 s. It is 
 currently unknown why the erroneous spikes in the performance metrics are experienced, this will be investigated further.
 
