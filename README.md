@@ -110,7 +110,7 @@ where:
 
 ## Model Training Workflow 
 The data for training is first resampled to a constant time step time base and is zero mean and unit variance normalized. The data is then divided into batches,
-where the input is a sequence length samples of the data and its label is the same collection of data plus a number of additional samples into the future. For training,
+where the input a sample of the data containing a number of points equal to the value of the variable seq_len (sequence length) and its label is the same collection of data plus a number of additional samples into the future. For training,
 the model receives the sequence length input of original data and is autoregressively (adding an output one time step into the future onto the end of the input data)
 used to make the same number of predictions into the future as the labels were established with. The loss is then calculated on all the future autoregressive outputs produced
 for the input sequence length of original data. The loss function is a combination of mean squared error (MSE), a convolutional first derivative (to capture more 
