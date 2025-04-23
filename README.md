@@ -119,13 +119,13 @@ around high frequency features). Every certain number of epochs, the performance
 input window of the data and predicting one time step into the future to effectively recreate the ground truth data. In implementation, the time into the future the model needs 
 to predict the surface state at is not constant and depends on different hardware and software limitations. This is accounted for during printing by utilizing the cross correlation 
 of the printer position history and printing surface state history to adjust the time into the future to predict. Therefore, the model is trained to autoregressively make predictions 
-0.4 s into the future, which is larger than the prediction window typically seen during trials (0.15 - 0.35 s).
+0.49 s into the future, which is larger than the prediction window typically seen during trials (0.15 - 0.35 s).
 
 ## Model Validation Workflow 
 For validation, data in the same form as the training data, but from a different sample, is utilized. The data is implemented as it would be in on-the-fly printer control, giving a 
 rolling sequence length input window of data to the model. The window of data is resampled to have the same time step as the resampled training data and is normalized using the 
 same zero mean and unit variance as the training data. The model is used to autoregressively make predictions a constant time into the future, 0.25 s is what it is currently set to 
-and was used for the plots in the two update sections (various prediction times are evaluated in the discussion section). If the time into the future to predict is not a multiple of the 
+and was used for the plots in the two update sections (various prediction times are evaluated in the [Discussion](#discussion) section). If the time into the future to predict is not a multiple of the 
 resampled time step, an extra autoregressive output is produced and the predicted point is linearly interpolated between the last two outputs.
 
 ## Run Instructions
@@ -144,12 +144,12 @@ rate data from [\TimeSeriesForcasting\datasets\0.67 Hz membrane\4-17-25\2\lists.
 <table>
   <tr>
     <td align="center">
-      <img src="train/train_output/LSTMOG/inference/rollout_epoch50.png" width="725px" alt="Training"><br>
-      <sub>Training</sub>
+      <img src="train/train_output/LSTMOG/inference/rollout_epoch50.png" width="726px" alt="Training Data"><br>
+      <sub>Training Data</sub>
     </td>
     <td align="center">
-      <img src="testfuncs/test_output/LSTMOG/prediction.png" width="630px" alt="Validation"><br>
-      <sub>Validation</sub>
+      <img src="testfuncs/test_output/LSTMOG/prediction.png" width="630px" alt="Validation Data"><br>
+      <sub>Validation Data</sub>
     </td>
   </tr>
 </table>
@@ -165,14 +165,36 @@ and validated on the high sampling rate data from [\TimeSeriesForcasting\dataset
 <table>
   <tr>
     <td align="center">
-      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="725px" alt="Training"><br>
-      <sub>Training</sub>
+      <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="726px" alt="Training Data"><br>
+      <sub>Training Data</sub>
     </td>
     <td align="center">
-      <img src="testfuncs/test_output/LSTM1/prediction.png" width="630px" alt="Validation"><br>
-      <sub>Validation</sub>
+      <img src="testfuncs/test_output/LSTM1/prediction.png" width="630px" alt="Validation Data"><br>
+      <sub>Validation Data</sub>
     </td>
   </tr>
 </table>
 
 ## Discussion
+
+The current model performance saw almost perfect accuracy during training, with only slight amplitude errors in the peaks and troughs of the data. This performance degraded slightly on the 
+validation data with larger error seen in the troughs of the data (with a high error around what seems like a discrepancy in the ground truth data). The performance particularly improved 
+around the high frequency features at the peaks of the data, as can be seen in the zoomed in [plot](testfuncs/test_output/LSTM1/prediction_zoom.png). It is currently unknown whether the 
+performance achieved here is 'good enough'. The model changes need to be implemented in the printer control code to see if the performance produced with this model results in prints with 
+higher quality than the previous model. If the performance needs to be improved further, a frequency based adaptive filtering technique can be implemented to correct the errors of the LSTM 
+based on a history of its mistakes, specifically around sharp features like the trough. This has begun to be developed in the [QKLMS.py](models/qklms.py) file.
+
+The performance of the models were also evaluated on the validation data for other prediction times into the future besides just 0.25 s, as in the validation data previously displayed, to see 
+how the models will preform if other prediction times are necessary. For the plots below, the new LSTM was trained with autoregressive outputs up to 0.49 s in the future and was tested on the 
+training data with a prediction time of 0.0245 s and the old LSTM was trained with one output 0.0245 s in the future and was tested on the training data with a prediction time of 0.0245 s.
+
+<table>
+  <tr>
+    <td><img src="testfuncs/test_output/window_eval/plot/MAE_Index_.png" width="300px" alt="Plot 1"></td>
+    <td><img src="testfuncs/test_output/window_eval/plot/R_.png" width="300px" alt="Plot 2"></td>
+  </tr>
+  <tr>
+    <td><img src="testfuncs/test_output/window_eval/plot/SMAPE_.png" alt="Plot 3"></td>
+    <td><img src="testfuncs/test_output/window_eval/plot/High_pass_0.67_Hz_SNR_dB_.png" width="300px" alt="Plot 4"></td>
+  </tr>
+</table>
