@@ -184,9 +184,10 @@ performance achieved here is 'good enough'. The model changes need to be impleme
 higher quality than the previous model. If the performance needs to be improved further, a frequency based adaptive filtering technique can be implemented to correct the errors of the LSTM 
 based on a history of its mistakes, specifically around sharp features like the trough. This has begun to be developed in the [QKLMS.py](models/qklms.py) file.
 
-The performance of the models were also evaluated on the validation data for other prediction times into the future besides just 0.25 s, as in the validation data previously displayed, to see 
+The performance of the models was also evaluated on the validation data for other prediction times into the future besides just 0.25 s, as in the validation data previously displayed, to see 
 how the models will preform if other prediction times are necessary. For the plots below, the new LSTM was trained with autoregressive outputs up to 0.49 s in the future and was tested on the 
-training data with a prediction time of 0.0245 s and the old LSTM was trained with one output 0.0245 s in the future and was tested on the training data with a prediction time of 0.0245 s.
+training data with a prediction time of 0.0245 s and the old LSTM was trained with one output 0.0245 s in the future and was tested on the training data with a prediction time of 0.0245 s. It is 
+currently unknown why the erroneous spikes in the performance metrics are experienced, this will be investigated further.
 
 <table>
   <tr>
