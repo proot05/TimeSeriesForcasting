@@ -35,11 +35,11 @@ for col_name in y_columns:
 
     # Plot New LSTM Train dot (row 4)
     x4, y4 = df_raw.iloc[3]['Future Prediction Time (s)'], df_raw.iloc[3][col_name]
-    ax.plot(x4, y4, marker='x', markersize=8, color='tab:green', linestyle='None', label='New LSTM Train')
+    ax.plot(x4, y4, marker='x', markersize=15, color='tab:green', linestyle='None', label='New LSTM Train')
 
     # Plot Old LSTM Train dot (row 21)
     x21, y21 = df_raw.iloc[20]['Future Prediction Time (s)'], df_raw.iloc[20][col_name]
-    ax.plot(x21, y21, marker='x', markersize=8, color='tab:red', linestyle='None', label='Old LSTM Train')
+    ax.plot(x21, y21, marker='x', markersize=15, color='tab:red', linestyle='None', label='Old LSTM Train')
 
     ax.set_xlabel('Future Prediction Time (s)')
     ax.set_ylabel(col_name)
