@@ -272,7 +272,7 @@ of worse performance). The reason for the better R² and SMAPE values is that th
 SNR is a change in the amplitude of the data between the training/validation and test sets. For the validation and training data, the surface state amplitude is consistent, whereas for the testing data it varies. The change 
 in amplitude results primarily from the decreased sampling rate. Additionally, the high frequency training/validation data is collected while the camera is stationary, however, the testing data was collected while the camera 
 was in motion, resulting in varying peak values. Surprisingly, the decreased sampling rate of the testing data did not significantly degrade the performance of the model. This is because all data is resampled to have the same 
-time step before being input to the model.
+time step as the training data before being input to the model.
 
 <table>
   <tr>
