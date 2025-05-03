@@ -224,16 +224,32 @@ the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydico
 ## Test Results
 <table>
   <tr>
-    <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="500px" alt="Plot 1"></td>
-    <sub>Low Sampling Rate 0.67 Hz Surface Data</sub>
-    <td><img src="Final_Tests/2Hz_Membrane_High_Sampling/prediction.png" width="500px" alt="Plot 2"></td>
-    <sub>High Sampling Rate 2 Hz Surface Data</sub>
+    <td>
+      <figure>
+        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="500" alt="Plot 1">
+        <figcaption>Low Sampling Rate 0.67 Hz Surface Data</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="Final_Tests/2Hz_Membrane_High_Sampling/prediction.png" width="500" alt="Plot 2">
+        <figcaption>High Sampling Rate 2 Hz Surface Data</figcaption>
+      </figure>
+    </td>
   </tr>
   <tr>
-    <td><img src="Final_Tests/2Hz_Membrane_Low_Sampling/prediction.png" width="500px" alt="Plot 3"></td>
-    <sub>Low Sampling Rate 2 Hz Surface Data</sub>
-    <td><img src="Final_Tests/ECG/prediction.png" width="500px" alt="Plot 4"></td>
-    <sub>ECG Data</sub>
+    <td>
+      <figure>
+        <img src="Final_Tests/2Hz_Membrane_Low_Sampling/prediction.png" width="500" alt="Plot 3">
+        <figcaption>Low Sampling Rate 2 Hz Surface Data</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="Final_Tests/ECG/prediction.png" width="500" alt="Plot 4">
+        <figcaption>ECG Data</figcaption>
+      </figure>
+    </td>
   </tr>
 </table>
 
