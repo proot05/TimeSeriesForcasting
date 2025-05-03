@@ -224,7 +224,7 @@ the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydico
 ## Test Results
 <table>
   <tr>
-    <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png"500px" alt="Plot 1"></td>
+    <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="500px" alt="Plot 1"></td>
     <td><img src="Final_Tests/2Hz_Membrane_High_Sampling/prediction.png" width="500px" alt="Plot 2"></td>
   </tr>
   <tr>
