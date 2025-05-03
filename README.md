@@ -304,3 +304,24 @@ of the model. This is because all data is resampled to have the same time step b
     </td>
   </tr>
 </table>
+
+Along with other improvements to the 3D control software, this prediction algorithm led to the improvement in print quality depicted below. 
+There are still some errors in the current printing performance, that are likely a result of other systematic errors, however, with this algorithm
+the performance has greatly improved.
+
+<table>
+  <tr>
+    <td>
+      <figure>
+        <img src="path/to/image1.png" width="300" alt="Image 1">
+        <figcaption>Caption for Image 1</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="path/to/image2.png" width="300" alt="Image 2">
+        <figcaption>Caption for Image 2</figcaption>
+      </figure>
+    </td>
+  </tr>
+</table>
