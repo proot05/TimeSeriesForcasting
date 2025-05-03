@@ -220,3 +220,15 @@ accurately simulates the implementation of the trained model as it would be in t
 on the high camera sampling rate data from a data collection where the membrane deforms at a dominant frequency of 2 Hz and the file within the [\2Hz_Membrane_Low_Sampling](Final_Tests/2Hz_Membrane_Low_Sampling) folder
 will run the predictions on the low camera sampling rate data from a different data collection where the membrane deforms at a dominant frequency of 2 Hz. Finally, the file within the [\ECG](Final_Tests/ECG) folder will run
 the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydicom example dataset sampled at ~1 kHz with a ~1 Hz dominant frequency.
+
+## Test Results
+<table>
+  <tr>
+    <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png"562px" alt="Plot 1"></td>
+    <td><img src="Final_Tests/2Hz_Membrane_High_Sampling/prediction.png" width="571px" alt="Plot 2"></td>
+  </tr>
+  <tr>
+    <td><img src="Final_Tests/2Hz_Membrane_Low_Sampling/prediction.png" width="562px" alt="Plot 3"></td>
+    <td><img src="Final_Tests/ECG/prediction.png" width="567px" alt="Plot 4"></td>
+  </tr>
+</table>
