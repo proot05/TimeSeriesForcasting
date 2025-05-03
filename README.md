@@ -278,19 +278,19 @@ time step as the training data before being input to the model.
   <tr>
     <td>
       <figure>
-        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 4">
+        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="Image 4">
         <figcaption>All Train Data</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="testfuncs/test_output/LSTM1/prediction.png"width="300" alt="Image 5">
+        <img src="testfuncs/test_output/LSTM1/prediction.png"width="1692" alt="Image 5">
         <figcaption>All Validation Data</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="300" alt="Image 6">
+        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="1692" alt="Image 6">
         <figcaption>All Test Data</figcaption>
       </figure>
     </td>
@@ -299,19 +299,19 @@ time step as the training data before being input to the model.
   <tr>
     <td>
       <figure>
-        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 4">
+        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="Image 4">
         <figcaption>All Train Data</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="testfuncs/test_output/LSTM1/prediction_zoom.png" width="300" alt="Image 5">
+        <img src="testfuncs/test_output/LSTM1/prediction_zoom.png" width="1692" alt="Image 5">
         <figcaption>End of Validation Data</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="300" alt="Image 6">
+        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="1692" alt="Image 6">
         <figcaption>End of Test Data</figcaption>
       </figure>
     </td>
