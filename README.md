@@ -218,5 +218,5 @@ the [Model Validation Workflow](#model-validation-workflow) section and plot the
 [\0.67Hz_Membrane_Low_Sampling](Final_Tests/0.67Hz_Membrane_Low_Sampling) folder will run the predictions on the low camera sampling rate data from the same data collection as the training data, therefore, it most 
 accurately simulates the implementation of the trained model as it would be in the 3D printer control. The file within the [\2Hz_Membrane_High_Sampling](Final_Tests/2Hz_Membrane_High_Sampling) folder will run the predictions
 on the high camera sampling rate data from a data collection where the membrane deforms at a dominant frequency of 2 Hz and the file within the [\2Hz_Membrane_Low_Sampling](Final_Tests/2Hz_Membrane_Low_Sampling) folder
-will run the predictions on the low camera sampling rate data from a different data collection where the membrane deforms at a dominant frequency of 2 Hz. Finally, the file within the [\ECG](Final_Tests/ECG) will run
-the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydicom example dataset sampled at ~1 kHz.
+will run the predictions on the low camera sampling rate data from a different data collection where the membrane deforms at a dominant frequency of 2 Hz. Finally, the file within the [\ECG](Final_Tests/ECG) folder will run
+the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydicom example dataset sampled at ~1 kHz with a ~1 Hz dominant frequency.
