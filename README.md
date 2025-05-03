@@ -279,7 +279,7 @@ time step as the training data before being input to the model.
     <td>
       <figure>
         <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="Image 4">
-        <figcaption>All Train Data</figcaption>
+        <figcaption>[All Train Data](train/train_output/LSTM1/inference/rollout_epoch50.png)</figcaption>
       </figure>
     </td>
     <td>
