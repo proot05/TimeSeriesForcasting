@@ -276,29 +276,43 @@ time step as the training data before being input to the model.
 
 <table>
   <tr>
-    <td><img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 1"></td>
-    <td><img src="testfuncs/test_output/LSTM1/prediction.png" width="300" alt="Image 2"></td>
-    <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="300" alt="Image 3"></td>
+    <td>
+      <figure>
+        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 4">
+        <figcaption>All Train Data</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="testfuncs/test_output/LSTM1/prediction.png"width="300" alt="Image 5">
+        <figcaption>All Validation Data</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="300" alt="Image 6">
+        <figcaption>All Test Data</figcaption>
+      </figure>
+    </td>
   </tr>
 
-  <!-- Second row: three images each wrapped in a <figure> so the <figcaption> sits beneath -->
   <tr>
     <td>
       <figure>
         <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 4">
-        <figcaption>Train</figcaption>
+        <figcaption>All Train Data</figcaption>
       </figure>
     </td>
     <td>
       <figure>
         <img src="testfuncs/test_output/LSTM1/prediction_zoom.png" width="300" alt="Image 5">
-        <figcaption>Validation</figcaption>
+        <figcaption>End of Validation Data</figcaption>
       </figure>
     </td>
     <td>
       <figure>
         <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="300" alt="Image 6">
-        <figcaption>Test</figcaption>
+        <figcaption>End of Test Data</figcaption>
       </figure>
     </td>
   </tr>
