@@ -125,7 +125,7 @@ of the printer position history and printing surface state history to adjust the
 For validation, data in the same form as the training data, but from a different sample, is utilized. The data is implemented as it would be in on-the-fly printer control, giving a 
 rolling sequence length input window of data to the model. The window of data is resampled to have the same time step as the resampled training data and is normalized using the 
 same zero mean and unit variance as the training data. The model is used to autoregressively make predictions a constant time into the future, 0.25 s is what it is currently set to 
-and was used for the plots in the two update sections (various prediction times are evaluated in the [Discussion](#discussion) section). If the time into the future to predict is not a multiple of the 
+and was used for the plots in the two update sections (various prediction times are evaluated in the [Validation Discussion](#validation_discussion) section). If the time into the future to predict is not a multiple of the 
 resampled time step, an extra autoregressive output is produced and the predicted point is linearly interpolated between the last two outputs.
 
 ## Run Instructions for Validation Sample
@@ -179,7 +179,7 @@ and validated on the high sampling rate data from [\TimeSeriesForcasting\dataset
   </tr>
 </table>
 
-## Discussion
+## Validation Discussion
 
 The current model performance saw almost perfect accuracy during training, with only slight amplitude errors in the peaks and troughs of the data. This performance degraded slightly on the 
 validation data with larger error seen in the troughs of the data (with a high error around what seems like a discrepancy in the ground truth data). It is important to note
@@ -225,10 +225,17 @@ the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydico
 <table>
   <tr>
     <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="500px" alt="Plot 1"></td>
+    <sub>Low Sampling Rate 0.67 Hz Surface Data</sub>
     <td><img src="Final_Tests/2Hz_Membrane_High_Sampling/prediction.png" width="500px" alt="Plot 2"></td>
+    <sub>High Sampling Rate 2 Hz Surface Data</sub>
   </tr>
   <tr>
     <td><img src="Final_Tests/2Hz_Membrane_Low_Sampling/prediction.png" width="500px" alt="Plot 3"></td>
+    <sub>Low Sampling Rate 2 Hz Surface Data</sub>
     <td><img src="Final_Tests/ECG/prediction.png" width="500px" alt="Plot 4"></td>
+    <sub>ECG Data</sub>
   </tr>
 </table>
+
+## Test Discussion
+Looking at the test results, the only predictions that were coherent were the 
