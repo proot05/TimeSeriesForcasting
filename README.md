@@ -287,19 +287,19 @@ of the model. This is because all data is resampled to have the same time step b
     <td>
       <figure>
         <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 4">
-        <figcaption>Caption for Image 4</figcaption>
+        <figcaption>Train</figcaption>
       </figure>
     </td>
     <td>
       <figure>
         <img src="testfuncs/test_output/LSTM1/prediction_zoom.png" width="300" alt="Image 5">
-        <figcaption>Caption for Image 5</figcaption>
+        <figcaption>Validation</figcaption>
       </figure>
     </td>
     <td>
       <figure>
         <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="300" alt="Image 6">
-        <figcaption>Caption for Image 6</figcaption>
+        <figcaption>Test</figcaption>
       </figure>
     </td>
   </tr>
