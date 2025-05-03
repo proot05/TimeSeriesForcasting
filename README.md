@@ -312,13 +312,13 @@ There are still some minor errors in the current printing performance, that are 
   <tr>
     <td>
       <figure>
-        <img src="images/oldprint.JPG" width="300" alt="Image 1">
+        <img src="images/oldprint.JPG" width="500" alt="Image 1">
         <figcaption>First Model Printing Performance</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="images/bestprint.JPG" width="300" alt="Image 2">
+        <img src="images/bestprint.JPG" width="500" alt="Image 2">
         <figcaption>Second Model Printing Performance</figcaption>
       </figure>
     </td>
