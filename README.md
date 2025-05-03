@@ -278,20 +278,32 @@ time step as the training data before being input to the model.
   <tr>
     <td>
       <figure>
-        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="Image 4">
-        <figcaption>[All Train Data](train/train_output/LSTM1/inference/rollout_epoch50.png)</figcaption>
+        <a href="train/train_output/LSTM1/inference/rollout_epoch50.png">
+          <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="All Train Data">
+        </a>
+        <figcaption>
+          <a href="train/train_output/LSTM1/inference/rollout_epoch50.png">All Train Data</a>
+        </figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="testfuncs/test_output/LSTM1/prediction.png"width="1692" alt="Image 5">
-        <figcaption>All Validation Data</figcaption>
+        <a href="testfuncs/test_output/LSTM1/prediction.png">
+          <img src="testfuncs/test_output/LSTM1/prediction.png" width="1692" alt="All Validation Data">
+        </a>
+        <figcaption>
+          <a href="testfuncs/test_output/LSTM1/prediction.png">All Validation Data</a>
+        </figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="1692" alt="Image 6">
-        <figcaption>All Test Data</figcaption>
+        <a href="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png">
+          <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="1692" alt="All Test Data">
+        </a>
+        <figcaption>
+          <a href="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png">All Test Data</a>
+        </figcaption>
       </figure>
     </td>
   </tr>
@@ -299,24 +311,37 @@ time step as the training data before being input to the model.
   <tr>
     <td>
       <figure>
-        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="Image 4">
-        <figcaption>All Train Data</figcaption>
+        <a href="train/train_output/LSTM1/inference/rollout_epoch50.png">
+          <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="1942" alt="All Train Data">
+        </a>
+        <figcaption>
+          <a href="train/train_output/LSTM1/inference/rollout_epoch50.png">All Train Data</a>
+        </figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="testfuncs/test_output/LSTM1/prediction_zoom.png" width="1692" alt="Image 5">
-        <figcaption>End of Validation Data</figcaption>
+        <a href="testfuncs/test_output/LSTM1/prediction_zoom.png">
+          <img src="testfuncs/test_output/LSTM1/prediction_zoom.png" width="1692" alt="End of Validation Data">
+        </a>
+        <figcaption>
+          <a href="testfuncs/test_output/LSTM1/prediction_zoom.png">End of Validation Data</a>
+        </figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="1692" alt="Image 6">
-        <figcaption>End of Test Data</figcaption>
+        <a href="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png">
+          <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="1692" alt="End of Test Data">
+        </a>
+        <figcaption>
+          <a href="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png">End of Test Data</a>
+        </figcaption>
       </figure>
     </td>
   </tr>
 </table>
+
 
 Along with other improvements to the 3D printer control software, this prediction algorithm led to the improvement in print quality when tracking a dynamically deforming surface depicted below. 
 There are still some minor errors in the current printing performance, that are likely a result of other systematic errors, however, with this algorithm the performance has greatly improved. It seems
