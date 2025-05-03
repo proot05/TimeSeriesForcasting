@@ -186,8 +186,8 @@ validation data with larger error seen in the troughs of the data (with a high e
 that these two collections of data (training and validation) were collected in an identical manner, at similar sampling rates, and with the printing surface moving in identical manners. The better 
 performance on the training data is expected, not only because that is how neural networks perform, but also because it was tested without making autoregressive inputs (only predicting one time 
 step in the future to save computational time), whereas the validation data utilized autoregressive inputs to predict 0.25 s into the future. Despite making the comparison more convoluted, the use 
-of the validation data is more similar to the intended final use case and the fact that there was only a minor decrease in performance is significant given the majorly increased potential for error 
-introduction with the use of autoregressive predictions.
+of the validation data is more similar to the intended final use case of the model and the fact that there was only a minor decrease in performance is significant given the majorly increased potential 
+for error introduction with the use of autoregressive predictions.
 
 The performance, from the first update to the second update, particularly improved around the high frequency features at the peaks of the data, as can be seen in the zoomed in 
 [plot](testfuncs/test_output/LSTM1/prediction_zoom.png). It is currently unknown whether the performance achieved here is 'good enough'. The model changes need to be implemented in the printer 
@@ -214,12 +214,13 @@ currently unknown why the erroneous spikes in the performance metrics are experi
 
 ## Run Instructions for Test Samples
 To run the trained neural network on a test sample, open and run any of the python files within the subfolders within the [\Final_Tests](Final_Tests) folder. It will run the predictions in the manner detailed in 
-the [Model Validation Workflow](#model-validation-workflow) section and plot the ground truth data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The file within the 
-[\0.67Hz_Membrane_Low_Sampling](Final_Tests/0.67Hz_Membrane_Low_Sampling) folder will run the predictions on the low camera sampling rate data from the same data collection as the training data, therefore, it most 
-accurately simulates the implementation of the trained model as it would be in the 3D printer control. The file within the [\2Hz_Membrane_High_Sampling](Final_Tests/2Hz_Membrane_High_Sampling) folder will run the predictions
-on the high camera sampling rate data from a data collection where the membrane deforms at a dominant frequency of 2 Hz and the file within the [\2Hz_Membrane_Low_Sampling](Final_Tests/2Hz_Membrane_Low_Sampling) folder
-will run the predictions on the low camera sampling rate data from a different data collection where the membrane deforms at a dominant frequency of 2 Hz. Finally, the file within the [\ECG](Final_Tests/ECG) folder will run
-the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydicom example dataset sampled at ~1 kHz with a ~1 Hz dominant frequency.
+the [Model Validation Workflow](#model-validation-workflow) section and plot the ground truth data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to 
+the terminal as well). The file within the [\0.67Hz_Membrane_Low_Sampling](Final_Tests/0.67Hz_Membrane_Low_Sampling) folder will run the predictions (predicting samples 0.25 s in the future) on the low camera sampling 
+rate data from the same data collection as the training data, therefore, it most accurately simulates the implementation of the trained model as it would be in the 3D printer control. The file within the 
+[\2Hz_Membrane_High_Sampling](Final_Tests/2Hz_Membrane_High_Sampling) folder will run the predictions (predicting samples 0.25 s in the future) on the high camera sampling rate data from a data collection where the 
+membrane deforms at a dominant frequency of 2 Hz and the file within the [\2Hz_Membrane_Low_Sampling](Final_Tests/2Hz_Membrane_Low_Sampling) folder will run the predictions (predicting samples 0.25 s in the future) on 
+the low camera sampling rate data from a different data collection where the membrane deforms at a dominant frequency of 2 Hz. Finally, the file within the [\ECG](Final_Tests/ECG) folder will run the predictions 
+(predicting samples 0.1 s in the future) on a 10 s sample of electrocardiogram (ECG) data from the pydicom example dataset sampled at ~1 kHz with a ~1 Hz dominant frequency.
 
 ## Test Results
 <table>
@@ -254,4 +255,52 @@ the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydico
 </table>
 
 ## Test Discussion
-Looking at the test results, the only predictions that were coherent were the 
+Looking at the test results, as expected, the only predictions that were coherent were when the model was applied to the low camera sampling rate data from the 0.67 Hz membrane from the same data collection
+as the high camera sampling rate data that the model was trained on (in correspondence with the intended use of the model described in the [Datasets](#datasets) section). The model was trained on 2000 samples 
+of surface state ids, representing around 50 s of data, and for testing the model was applied to 2200 samples of data, representing around 220 s of data (the difference in time span for roughly the same number 
+of samples is explained by the change in camera sampling rate). 
+
+For training, the ground truth data is supplied to the model as a rolling window of 200 data samples and is autoregressively used to predict 20 
+data samples into the future, which are compared to the next 20 samples of ground truth data after the window to calculate the loss. For testing and validation, the data is supplied to the model 200 samples 
+at a time and is used to predict one data sample (typically 0.25 s into the future for the purpose of this project). As previously described, the training and validation data are of the same form but from 
+different data collection samples. This validates the model on the only source of data that is most similar to the training data but that the model was not trained on. 
+
+Comparing the performance metrics between the training, validation, and testing data, the model produced the lowest MAE, highest R², lowest SMAPE, and highest high-pass SNR on the training data, as expected. 
+However, the performance on all three data selections was exceptionally good, as can be seen in the plots below. However, comparing the performance metrics between the validation and testing data is of interest.
+This is because the R² of the testing data is higher and its SMAPE was lower (indicative of better performance) than the validation data, while the MAE was relatively similar and the high-pass SNR decreased (indicative
+of worse performance). The reason for the better R² and SMAPE values is that the testing data has a lower sampling rate and thus is smoother (has less noise) than the validation data. The reason for the decreased high-pass
+SNR is a change in the amplitude of the data between the training/validation and test sets. For the validation and training data, the maximum surface state id is around 160, whereas for the testing data it is around 175; thus,
+the predictions fail to span the full amplitude range of the testing data. This is probably further amplified as the normalization applied for each application of the model is that of the training data, as the model is intended
+to be applied without full knowledge of the waveform. The reason for the change in amplitude is a hardware issue of the depth camera recording the data. The high frequency training/validation data is collected while the camera 
+is stationary, however, the testing data was collected while the camera was in motion, resulting in varying peak values. Surprisingly, the decreased sampling rate of the testing data did not significantly impact the performance 
+of the model. This is because all data is resampled to have the same time step before being input to the model.
+
+<table>
+  <tr>
+    <td><img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 1"></td>
+    <td><img src="test/test_output/LSTM1/prediction.png" width="300" alt="Image 2"></td>
+    <td><img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction.png" width="300" alt="Image 3"></td>
+  </tr>
+
+  <!-- Second row: three images each wrapped in a <figure> so the <figcaption> sits beneath -->
+  <tr>
+    <td>
+      <figure>
+        <img src="train/train_output/LSTM1/inference/rollout_epoch50.png" width="300" alt="Image 4">
+        <figcaption>Caption for Image 4</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="test/test_output/LSTM1/prediction_zoom.png" width="300" alt="Image 5">
+        <figcaption>Caption for Image 5</figcaption>
+      </figure>
+    </td>
+    <td>
+      <figure>
+        <img src="Final_Tests/0.67Hz_Membrane_Low_Sampling/prediction_zoom.png" width="300" alt="Image 6">
+        <figcaption>Caption for Image 6</figcaption>
+      </figure>
+    </td>
+  </tr>
+</table>
