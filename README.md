@@ -266,14 +266,13 @@ at a time and is used to predict one data sample (typically 0.25 s into the futu
 different data collection samples. This validates the model on the only source of data that is most similar to the training data but that the model was not trained on. 
 
 Comparing the performance metrics between the training, validation, and testing data, the model produced the lowest MAE, highest R², lowest SMAPE, and highest high-pass SNR on the training data, as expected. 
-However, the performance on all three data selections was exceptionally good, as can be seen in the plots below. However, comparing the performance metrics between the validation and testing data is of interest.
+However, the performance on all three data selections was exceptionally good, as can be seen in the plots below. Particularly, comparing the performance metrics between the validation and testing data is of interest.
 This is because the R² of the testing data is higher and its SMAPE was lower (indicative of better performance) than the validation data, while the MAE was relatively similar and the high-pass SNR decreased (indicative
 of worse performance). The reason for the better R² and SMAPE values is that the testing data has a lower sampling rate and thus is smoother (has less noise) than the validation data. The reason for the decreased high-pass
-SNR is a change in the amplitude of the data between the training/validation and test sets. For the validation and training data, the maximum surface state id is around 160, whereas for the testing data it is around 175; thus,
-the predictions fail to span the full amplitude range of the testing data. This is probably further amplified as the normalization applied for each application of the model is that of the training data, as the model is intended
-to be applied without full knowledge of the waveform. The reason for the change in amplitude is a hardware issue of the depth camera recording the data. The high frequency training/validation data is collected while the camera 
-is stationary, however, the testing data was collected while the camera was in motion, resulting in varying peak values. Surprisingly, the decreased sampling rate of the testing data did not significantly impact the performance 
-of the model. This is because all data is resampled to have the same time step before being input to the model.
+SNR is a change in the amplitude of the data between the training/validation and test sets. For the validation and training data, the surface state amplitude is consistent, whereas for the testing data it varies. The change 
+in amplitude results primarily from the decreased sampling rate. Additionally, the high frequency training/validation data is collected while the camera is stationary, however, the testing data was collected while the camera 
+was in motion, resulting in varying peak values. Surprisingly, the decreased sampling rate of the testing data did not significantly degrade the performance of the model. This is because all data is resampled to have the same 
+time step before being input to the model.
 
 <table>
   <tr>
@@ -306,7 +305,9 @@ of the model. This is because all data is resampled to have the same time step b
 </table>
 
 Along with other improvements to the 3D printer control software, this prediction algorithm led to the improvement in print quality when tracking a dynamically deforming surface depicted below. 
-There are still some minor errors in the current printing performance, that are likely a result of other systematic errors, however, with this algorithm the performance has greatly improved.
+There are still some minor errors in the current printing performance, that are likely a result of other systematic errors, however, with this algorithm the performance has greatly improved. It seems
+that the prediction algorithm created here is very accurate and produces good enough performance for  use in the 3D printer control software. If at any point it is found that the algorithm needs to be
+further improved, potential methods for doing so are in the [Validation Discussion](#validation-discussion) section.
 
 <table>
   <tr>
