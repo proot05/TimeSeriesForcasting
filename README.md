@@ -305,22 +305,21 @@ of the model. This is because all data is resampled to have the same time step b
   </tr>
 </table>
 
-Along with other improvements to the 3D control software, this prediction algorithm led to the improvement in print quality depicted below. 
-There are still some errors in the current printing performance, that are likely a result of other systematic errors, however, with this algorithm
-the performance has greatly improved.
+Along with other improvements to the 3D printer control software, this prediction algorithm led to the improvement in print quality when tracking a dynamically deforming surface depicted below. 
+There are still some minor errors in the current printing performance, that are likely a result of other systematic errors, however, with this algorithm the performance has greatly improved.
 
 <table>
   <tr>
     <td>
       <figure>
-        <img src="path/to/image1.png" width="300" alt="Image 1">
-        <figcaption>Caption for Image 1</figcaption>
+        <img src="images/oldprint.JPG" width="300" alt="Image 1">
+        <figcaption>First Model Printing Performance</figcaption>
       </figure>
     </td>
     <td>
       <figure>
-        <img src="path/to/image2.png" width="300" alt="Image 2">
-        <figcaption>Caption for Image 2</figcaption>
+        <img src="images/bestprint.JPG" width="300" alt="Image 2">
+        <figcaption>Second Model Printing Performance</figcaption>
       </figure>
     </td>
   </tr>
