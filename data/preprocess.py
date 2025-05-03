@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 import pickle
 import os
-from typing import Tuple, List, Any
+from typing import Tuple, List, Any, Optional
 import numpy as np
 from scipy.interpolate import interp1d
 import torch
@@ -197,7 +197,8 @@ class MembraneDataLoader:
             date: str,
             frequency: float,
             number: int,
-            base_dir: str = "datasets"
+            base_dir: str = "datasets",
+            repo_dir: Optional[str] = None,
     ):
         """
         Parameters
@@ -215,11 +216,14 @@ class MembraneDataLoader:
         self.frequency = frequency
         self.number = number
         self.base_dir = base_dir
+        self.repo_dir = repo_dir if repo_dir is not None else None
 
     def _get_filepath(self) -> str:
         """
         Construct the full path to the lists.pkl file.
         """
+        if self.repo_dir is not None:
+            self.base_dir = os.path.join(self.repo_dir, self.base_dir)
         freq_folder = f"{self.frequency} Hz membrane"
         return os.path.join(
             self.base_dir,

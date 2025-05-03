@@ -16,7 +16,7 @@ time in the future given an input window of the history of mesh states up to tha
 
 ## Install
 ```
-conda create --name TSF python=3.9
+conda create --name TSF python=3.10
 conda activate TSF
 pip install --index-url https://download.pytorch.org/whl/cu116  --no-deps torch==1.13.0+cu116
 pip install -r requirements.txt
@@ -128,10 +128,11 @@ same zero mean and unit variance as the training data. The model is used to auto
 and was used for the plots in the two update sections (various prediction times are evaluated in the [Discussion](#discussion) section). If the time into the future to predict is not a multiple of the 
 resampled time step, an extra autoregressive output is produced and the predicted point is linearly interpolated between the last two outputs.
 
-## Run Instructions
+## Run Instructions for Validation Sample
 To run the trained neural network on a validation sample, open and run the [TestLSTM1.py](/TestLSTM1.py) file. It will run the predictions in the manner detailed in the last section and plot the ground truth
 data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The plots, one of the entirety of the data 
-and one of the last six seconds of data, will be saved in the [\TimeSeriesForcasting\testfuncs\test_output\LSTM1](testfuncs/test_output/LSTM1) folder and can be seen in the [Current Model Performance Update](#Current-Model-Performance-Update).
+and one of the last six seconds of data, will be saved in the [\TimeSeriesForcasting\testfuncs\test_output\LSTM1](testfuncs/test_output/LSTM1) folder and can be seen in the 
+[Second Model Performance Update](#Second-Model-Performance-Update).
 
 ## First Model Performance Update
 The initial backbone of the model developed in this project was started by a former student in my lab and was completed and improved upon by myself. This first update represents the 
@@ -158,7 +159,7 @@ The model would round off these features, effectively causing the predicted sign
 </table>
 
 
-## Current Model Performance Update
+## Second Model Performance Update
 This model represents my efforts to rebuild the training, evaluation, and prediction functions to fix errors and produce better performance. It uses the exact [training](#model-training-workflow) and 
 [validation](#model-validation-workflow) workflows detailed above. Additionally, it uses a tanh activation function after the first linear layer and properly handles normalization and output 
 interpolation. Some additional adjustments were made to better handle memory allocation and to limit the passing of data between the cpu and gpu in order to try to minimize the computational cost 
@@ -181,11 +182,19 @@ and validated on the high sampling rate data from [\TimeSeriesForcasting\dataset
 ## Discussion
 
 The current model performance saw almost perfect accuracy during training, with only slight amplitude errors in the peaks and troughs of the data. This performance degraded slightly on the 
-validation data with larger error seen in the troughs of the data (with a high error around what seems like a discrepancy in the ground truth data). The performance particularly improved 
-around the high frequency features at the peaks of the data, as can be seen in the zoomed in [plot](testfuncs/test_output/LSTM1/prediction_zoom.png). It is currently unknown whether the 
-performance achieved here is 'good enough'. The model changes need to be implemented in the printer control code to see if the performance produced with this model results in prints with 
-higher quality than the previous model. If the performance needs to be improved further, a frequency based adaptive filtering technique can be implemented to correct the errors of the LSTM 
-based on a history of its mistakes, specifically around sharp features like the trough. This has begun to be developed in the [QKLMS.py](models/qklms.py) file.
+validation data with larger error seen in the troughs of the data (with a high error around what seems like a discrepancy in the ground truth data). It is important to note
+that these two collections of data (training and validation) were collected in an identical manner, at similar sampling rates, and with the printing surface moving in identical manners. The better 
+performance on the training data is expected, not only because that is how neural networks perform, but also because it was tested without making autoregressive inputs (only predicting one time 
+step in the future to save computational time), whereas the validation data utilized autoregressive inputs to predict 0.25 s into the future. Despite making the comparison more convoluted, the use 
+of the validation data is more similar to the intended final use case and the fact that there was only a minor decrease in performance is significant given the majorly increased potential for error 
+introduction with the use of autoregressive predictions.
+
+The performance, from the first update to the second update, particularly improved around the high frequency features at the peaks of the data, as can be seen in the zoomed in 
+[plot](testfuncs/test_output/LSTM1/prediction_zoom.png). It is currently unknown whether the performance achieved here is 'good enough'. The model changes need to be implemented in the printer 
+control code to see if the performance produced with this model results in prints with higher quality than the previous model. If the performance needs to be improved further, a frequency based 
+adaptive filtering technique can be implemented to correct the errors of the LSTM based on a history of its mistakes, specifically around sharp features like the trough. This has begun to be 
+developed in the [QKLMS.py](models/qklms.py) file. Additionally, the training method can be altered to utilize input data originally sampled at a variety of rates to build in resilience to any
+changes in the camera sampling.
 
 The performance of the models was also evaluated on the validation data for other prediction times into the future besides just 0.25 s, as in the validation data previously displayed, to see 
 how the models will perform if other prediction times are necessary. For the plots below, the new LSTM was trained with autoregressive outputs up to 0.49 s in the future and was tested on the 
@@ -202,3 +211,12 @@ currently unknown why the erroneous spikes in the performance metrics are experi
     <td><img src="testfuncs/test_output/window_eval/plot/High_pass_0.67_Hz_SNR_dB_.png" width="567px" alt="Plot 4"></td>
   </tr>
 </table>
+
+## Run Instructions for Test Sample
+To run the trained neural network on a test sample, open and run any of the python files within the subfolders within the [\Final_Tests](Final_Tests) folder. It will run the predictions in the manner detailed in 
+the [Model Validation Workflow](Model-Validation-Workflow) section and plot the ground truth data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The file within the 
+[\0.67Hz_Membrane_Low_Sampling](Final_Tests/0.67Hz_Membrane_Low_Sampling) will run the predictions on the low camera sampling rate data from the same data collection as the training data, therefore, it most 
+accurately simulates the implementation of the trained model as it would be in 3D printer control. The file within the [\2Hz_Membrane_High_Sampling](Final_Tests/2Hz_Membrane_High_Sampling) will run the predictions
+on the high camera sampling rate data from a data collection where the membrane deforms at a dominate frequency of 2 Hz and the file within the [\2Hz_Membrane_Low_Sampling](Final_Tests/2Hz_Membrane_Low_Sampling)
+will run the predictions on the low camera sampling rate data from a different data collection where the membrane deforms at a dominate frequency of 2 Hz. Finally, the file within the [\ECG](Final_Tests/ECG) will run
+the predictions on a 10 s sample of electrocardiogram (ECG) data from the pydicom example dataset sampled at ~1 kHz.

@@ -1,16 +1,16 @@
-from data.preprocess import TimeSeriesPreprocessor, MembraneDataLoader
+from data.preprocess import TimeSeriesPreprocessor
 from testfuncs.predict import predict
 import matplotlib.pyplot as plt
 import torch
 from models.lstm1 import MyLSTM
 from tqdm import tqdm
-from os.path import exists as ose
-import shutil
 import os
 import numpy as np
 from scipy.interpolate import interp1d
 from data.evaluate import percent_variance_explained, smape, high_freq_snr
 import pylab
+from pydicom import examples
+
 
 device = torch.device('cuda')
 
@@ -19,14 +19,13 @@ params = {'legend.fontsize': 25*multp, 'axes.labelsize': 25*multp, 'axes.titlesi
           'ytick.labelsize': 25*multp}
 pylab.rcParams.update(params)
 
-input_dir = 'train/train_output/LSTM1'
-output_dir = 'testfuncs/test_output/LSTM1'
+current_dir = os.path.dirname(__file__)
 
-if ose(output_dir):
-    shutil.rmtree(output_dir)
-os.mkdir(output_dir)
+output_dir = current_dir
+repo_dir = os.path.abspath(os.path.join(os.path.abspath(os.path.join(current_dir, os.pardir)),os.pardir))
+input_dir = os.path.join(repo_dir,'train\\train_output\LSTM1')
 
-state = TimeSeriesPreprocessor.load_state(input_dir + '/checkpoints' + '/LSTM1_normalizer.pkl')
+state = TimeSeriesPreprocessor.load_state(os.path.join(input_dir, 'checkpoints', 'LSTM1_normalizer.pkl'))
 new_dt = state['dt_new']
 x_normalizer = state['normalizer']
 seq_len = state['seq_len']
@@ -34,7 +33,7 @@ train_size = state['train_size']
 
 print("dt = ", new_dt)
 
-checkpoint = torch.load(input_dir + '/checkpoints' + '/checkpoint_50.pt', map_location=device)
+checkpoint = torch.load(input_dir + '\checkpoints' + '\checkpoint_50.pt', map_location=device)
 
 model = MyLSTM(InFeatures=1,
                 OutFeatures=1,
@@ -52,15 +51,14 @@ print(f"Number of parameters: {total_params}")
 
 model.eval()
 
-# ~40 Hz sampled data (same as training but from a different sample than the training data)
-freq = 0.67
-loader = MembraneDataLoader(date="4-17-25", frequency=freq, number=2)
-mem_time, mem_data = loader.load_data()
-mem_time_test = mem_time[:train_size]
-mem_data_test = mem_data[:train_size]
+# ECG Data
+ds = examples.waveform
+arr = ds.waveform_array(0)
+mem_data_test = arr[:,0]
+mem_time_test = np.linspace(0, 10, len(mem_data_test))
 
 # time into the future to predict at
-rnn_delay = 0.25  #new_dt
+rnn_delay = 0.1  #new_dt
 
 pred_id = [None] * seq_len
 pred_id_time = [None] * seq_len
@@ -105,10 +103,23 @@ print(f"R² % = {pct_var1:.2f}%")
 pct_var2 = smape(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32))
 print(f"SMAPE = {pct_var2:.2f}%")
 
-fs = 1.0 / (common_time[1] - common_time[0])  # sampling rate in Hz
-cutoff = freq
+dt = (common_time[1] - common_time[0])
+fs = 1.0 / dt  # sampling rate in Hz
+print(f"Sampling frequency = {fs:.1f} Hz")
+
+# Perform FFT
+n = len(mem_data_test)
+fft_values = np.fft.fft(mem_data_test - np.mean(mem_data_test))  # subtract mean to remove DC component
+freqs = np.fft.fftfreq(n, d=dt)
+
+# Step 3: Find the peak frequency
+positive_freqs = freqs[:n//2]
+positive_fft_values = np.abs(fft_values[:n//2])
+
+cutoff = positive_freqs[np.argmax(positive_fft_values)]
+
 snr_hf = high_freq_snr(torch.tensor(preds_data_interp, dtype=torch.float32), torch.tensor(mem_data_interp, dtype=torch.float32), fs, cutoff)
-print(f"High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB")
+print(f"High‑pass SNR (> {cutoff:.2f} Hz) = {snr_hf:.1f} dB")
 
 # Plotting
 fig, ax = plt.subplots(figsize=(20, 16))
@@ -121,10 +132,10 @@ leg = ax.legend(loc='lower left', frameon=True)
 leg.get_frame().set_edgecolor('black')
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Index')
-plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, High‑pass SNR (> {cutoff} Hz) = {snr_hf:.1f} dB')
-plt.savefig(output_dir + '/prediction.png', bbox_inches='tight')
+plt.title(f'MAE = {average_error:.2f}, R² % = {pct_var1:.2f}%, SMAPE = {pct_var2:.2f}%, High‑pass SNR (> {cutoff:.2f} Hz) = {snr_hf:.1f} dB')
+plt.savefig(output_dir + '\prediction.png', bbox_inches='tight')
 
-plt.xlim([pred_id_time[-1]-5, pred_id_time[-1]])
-plt.savefig(output_dir + '/prediction_zoom.png', bbox_inches='tight')
+plt.xlim([pred_id_time[-1]-1, pred_id_time[-1]])
+plt.savefig(output_dir + '\prediction_zoom.png', bbox_inches='tight')
 
 plt.close()
