@@ -212,9 +212,9 @@ currently unknown why the erroneous spikes in the performance metrics are experi
   </tr>
 </table>
 
-## Run Instructions for Test Sample
+## Run Instructions for Test Samples
 To run the trained neural network on a test sample, open and run any of the python files within the subfolders within the [\Final_Tests](Final_Tests) folder. It will run the predictions in the manner detailed in 
-the [Model Validation Workflow](Model-Validation-Workflow) section and plot the ground truth data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The file within the 
+the [Model Validation Workflow](#model-validation-workflow) section and plot the ground truth data, predicted data, and error as a function of time, with the performance metrics listed in the title (they will print to the terminal as well). The file within the 
 [\0.67Hz_Membrane_Low_Sampling](Final_Tests/0.67Hz_Membrane_Low_Sampling) will run the predictions on the low camera sampling rate data from the same data collection as the training data, therefore, it most 
 accurately simulates the implementation of the trained model as it would be in 3D printer control. The file within the [\2Hz_Membrane_High_Sampling](Final_Tests/2Hz_Membrane_High_Sampling) will run the predictions
 on the high camera sampling rate data from a data collection where the membrane deforms at a dominate frequency of 2 Hz and the file within the [\2Hz_Membrane_Low_Sampling](Final_Tests/2Hz_Membrane_Low_Sampling)
