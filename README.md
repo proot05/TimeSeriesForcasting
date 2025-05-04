@@ -1,4 +1,4 @@
-# TIme Series Forcasting for On-the-Fly 3D Printer Control
+# TIme Series Forecasting for On-the-Fly 3D Printer Control
 
 ## Description
 The goal of this project is to improve the LSTM algorithm used by a six-axis 3D printer to predict the state of the surface 
